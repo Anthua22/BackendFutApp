@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Anthua22/BackendFutApp/issues"
   },
-  "homepage": "https://github.com/Anthua22/BackendFutApp#readme"
+  "homepage": "https://github.com/Anthua22/BackendFutApp#readme",
+  "dependencies": {
+    "mongoose": "^5.12.3"
+  }
 }

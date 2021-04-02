@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Parte de servidor del proyecto FutApp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anthua22/BackendFutApp.git"
+  },
+  "author": "Anthony Ubillus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anthua22/BackendFutApp/issues"
+  },
+  "homepage": "https://github.com/Anthua22/BackendFutApp#readme"
+}

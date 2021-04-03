@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Anthua22/BackendFutApp#readme",
   "dependencies": {
+    "moment": "^2.29.1",
     "mongoose": "^5.12.3"
   }
 }

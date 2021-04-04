@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/Anthua22/BackendFutApp#readme",
   "dependencies": {
-    "moment": "^2.29.1",
+    "base64-to-image": "^1.0.2",
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
     "mongoose": "^5.12.3"
   }
 }

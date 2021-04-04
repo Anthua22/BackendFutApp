@@ -15,8 +15,9 @@ let UsuarioSchema = new mongoose.Schema({
         unique: true
     },
 
-    telefono:{
-        type: String, 
+    telefono: {
+        require: false,
+        type: String,
         trim: true,
         pattern: /^[0-9]{9}$/
     },
@@ -30,6 +31,7 @@ let UsuarioSchema = new mongoose.Schema({
     },
 
     avatar: {
+        require: true,
         type: String,
         trim: true
     },
@@ -48,6 +50,7 @@ let UsuarioSchema = new mongoose.Schema({
         default: 'Sin Categoria'
     }
 });
+
 
 let Usuario = mongoose.model('usuarios', UsuarioSchema);
 module.exports = Usuario;

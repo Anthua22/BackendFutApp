@@ -3,7 +3,7 @@ const Usuario = require(__dirname + './../models/usuarios');
 const bcrypt = require(__dirname + './../utils/bcrypt');
 const uploadImage = require(__dirname + './../utils/uploadImagen');
 const fs = require('fs');
-const jwt = require('jsonwebtoken');
+const token = require(__dirname + './../utils/generateToken');
 
 let router = express.Router();
 
@@ -58,12 +58,18 @@ router.post('/login', (req, res) => {
         email: req.body.email
     }).then(x => {
         if (x) {
-            res.status(200).send({
-                ok: true, resultado: x
+            bcrypt.desincriptar(req.body.password, x.password).then(bool => {
+                if (bool === true) {
+                    res.status(200).send({
+                        ok: true, token: token(x)
+                    });
+                } else {
+                    res.status(401).send();
+                }
             });
         } else {
             res.status(400).send({
-                ok: false, error: 'No se ha encontrado el usuario con el email: '+req.body.email
+                ok: false, error: 'No se ha encontrado el usuario con el email: ' + req.body.email
             });
         }
 

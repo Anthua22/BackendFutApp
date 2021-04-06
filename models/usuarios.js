@@ -11,7 +11,7 @@ let UsuarioSchema = new mongoose.Schema({
         require: true,
         type: String,
         trim: true,
-        pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        match: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
         unique: true
     },
 
@@ -19,14 +19,14 @@ let UsuarioSchema = new mongoose.Schema({
         require: false,
         type: String,
         trim: true,
-        pattern: /^[0-9]{9}$/
+        match: /^[0-9]{9}$/
     },
 
     password: {
         require: true,
         type: String,
         trim: true,
-        pattern: /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/,
+        match: /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/,
         min: 8
     },
 

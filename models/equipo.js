@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const MiembroEquipo = require(__dirname + './miembroequipo');
+const MiembrosEquipo = require('./miembroequipo');
 
 let EquipoSchema = new mongoose.Schema({
     nombre: {
@@ -11,7 +11,7 @@ let EquipoSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    miembros: [MiembroEquipo],
+    miembros: [MiembrosEquipo],
     email: {
         require: true,
         type: String,

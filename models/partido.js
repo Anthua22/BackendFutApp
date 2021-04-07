@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-
-//const Equipo= require(__dirname + './equipo');
-const Usuario = require(__dirname + './usuarios');
+const Equipo = require(__dirname + './equipo');
+const Usuario = require(__dirname + './usuario');
 
 
 let PartidoSchema = new mongoose.Schema({

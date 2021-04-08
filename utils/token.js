@@ -12,6 +12,7 @@ let validarToken = (token) => {
         return resultado;
     } catch (e) { }
 };
+
 module.exports = {
     generarToken: generarToken,
     validarToken: validarToken

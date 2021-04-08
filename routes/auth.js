@@ -9,7 +9,7 @@ let router = express.Router();
 
 router.post('/register', async (req, res) => {
     if (req.body.password && req.body.nombre_completo && req.body.email) {
-        const pathFoto = uploadImage(req.body.foto, req.body.nombre_completo).fileName;
+        const pathFoto = uploadImage(req.body.foto, req.body.nombre_completo,'usuarios').fileName;
         let newUser = new Usuario({
             nombre_completo: req.body.nombre_completo,
             email: req.body.email,
@@ -19,11 +19,11 @@ router.post('/register', async (req, res) => {
             avatar: pathFoto
         });
         newUser.save().then(x => {
-            res.status(200).send({
+            res.status(201).send({
                 ok: true, resultado: x
             });
         }).catch(err => {
-            fs.unlinkSync(__dirname + "./../uploads/images" + pathFoto);
+            fs.unlinkSync(__dirname + "./../uploads/images/usuarios/" + pathFoto);
             if (err.code === 11000) {
                 res.status(400).send({
                     ok: false, error: 'El email introducido ya existe'

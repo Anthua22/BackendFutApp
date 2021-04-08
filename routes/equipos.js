@@ -2,6 +2,8 @@ const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
 const uploadImage = require(__dirname + './../utils/uploadImagen');
 const fs = require('fs');
+const commons = require(__dirname+'./../utils/common');
+
 
 let router = express.Router();
 
@@ -43,11 +45,11 @@ router.post('/', (req, res) => {
         });
         let pathFoto = '';
         if (req.body.escudo) {
-            pathFoto = uploadImage(req.body.escudo, req.body.nombre).fileName;
+            pathFoto = uploadImage(req.body.escudo, req.body.nombre, 'equipos').fileName;
             newEquipo.escudo = pathFoto;
         }
         newEquipo.save().then(resultado => {
-            res.status(200).send({
+            res.status(201).send({
                 ok: true, resultado: resultado
             });
         }).catch(err => {
@@ -92,6 +94,36 @@ router.post('/categoria', (req, res) => {
     });
 });
 
+router.post('/:idEquipo/miembro_equipo', (req, res) => {
+
+    let newMiembro = req.body.miembro;
+    const pathFoto = uploadImage(req.body.miembro.foto, req.body.miembro.nombre_completo, 'miembros_equipos').fileName;
+    newMiembro.foto = pathFoto;
+
+    Equipo.findByIdAndUpdate(req.params['idEquipo'], {
+        $push: {
+            miembros: newMiembro
+        }
+    }, {
+        new: true
+    }).then(x => {
+        if (x) {
+            res.status(201).send({
+                ok: true, resultado: x
+            });
+        } else {
+            res.status(400).send({
+                ok: false, error: "No existe el equipo"
+            });
+        }
+    }).catch(err => {
+        console.log(err)
+        commons('miembros_equipos/'+pathFoto);
+        res.status(400).send({
+            ok: false, error: "Error insertando un nuevo miembro al equipo"
+        })
+    });
+});
 
 
 

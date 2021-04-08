@@ -12,7 +12,11 @@ let MiembroEquipo = new mongoose.Schema({
         type: String,
         enum: ['JUGADOR', 'ENTRENADOR', 'DELEGADO', 'ENCARGADO_MATERIAL', 'PREPARADOR_FISICO']
     },
-
+    foto: {
+        require: true,
+        type: String,
+        trim: true
+    },
     sancionado: {
         require: false,
         type: Boolean,

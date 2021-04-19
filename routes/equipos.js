@@ -2,12 +2,12 @@ const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
 const uploadImage = require(__dirname + './../utils/uploadImagen');
 const commons = require(__dirname + './../utils/common');
-
+const autenticado = require(__dirname + './../utils/auth');
 
 let router = express.Router();
 
 router.get('/', (req, res) => {
-    Equipo.find().limit(11).then(resultado => {
+    Equipo.find().then(resultado => {
         res.status(200).send({
             ok: true, resultado: resultado
         });
@@ -53,7 +53,7 @@ router.post('/', (req, res) => {
             });
         }).catch(err => {
             if (req.body.escudo && pathFoto !== '') {
-                commons.deleteImagen('equipos' + pathFoto);
+                commons.deleteImagen('equipos/' + pathFoto);
             }
             commons.checkErrors(err, res);
         });
@@ -68,20 +68,20 @@ router.post('/', (req, res) => {
 
 router.post('/categoria', (req, res) => {
     Equipo.find({ categoria: req.body.categoria }).then(resultado => {
-        if (x.length > 0) {
+        if (resultado.length > 0) {
             res.send({ ok: true, resultado: resultado });
         } else {
-            res.status(500).send({ ok: false, error: 'No se han encontrados equipos en la categoría especificada' })
+            res.status(500).send({ ok: false, error: 'No se han encontrado equipos en la categoría especificada' })
         }
 
     }).catch(err => {
         res.status(500).send({
-            ok: false, error: 'No se han podido obtener equipos'
+            ok: false, error: 'No se han podido obtener los equipos'
         });
     });
 });
 
-router.post('/:idEquipo/miembro_equipo', (req, res) => {
+router.post('/:idEquipo/miembros_equipo', (req, res) => {
 
     let newMiembro = req.body.miembro;
     const pathFoto = uploadImage(req.body.miembro.foto, req.body.miembro.nombre_completo, 'miembros_equipos').fileName;
@@ -104,7 +104,7 @@ router.post('/:idEquipo/miembro_equipo', (req, res) => {
             });
         }
     }).catch(err => {
-        commons.deleteImagen('miembros_equipos' + pathFoto);
+        commons.deleteImagen('miembros_equipos/' + pathFoto);
         res.status(500).send({
             ok: false, error: "Error insertando un nuevo miembro al equipo"
         })
@@ -165,7 +165,7 @@ router.put('/:id', async (req, res) => {
         }
     } catch (err) {
         if (fotoNueva !== '') {
-            commons.deleteImagen('usuarios' + pathFoto);
+            commons.deleteImagen('miembros_equipos/' + pathFoto);
         }
         res.status(500).send({
             ok: false, error: "Error modificando el equipo " + err
@@ -201,7 +201,7 @@ router.patch('/:id/email', (req, res) => {
 });
 
 router.put('/:idEquipo/:idMiembro', async (req, res) => {
-    try{
+    try {
         let EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['idEquipo'], {
             $pull: {
                 miembros: { _id: req.params['idMiembro'] }
@@ -225,14 +225,66 @@ router.put('/:idEquipo/:idMiembro', async (req, res) => {
                 ok: false, error: "No existe el miembro del equipo"
             })
         }
-    }catch(err){
+    } catch (err) {
         res.status(500).send({
             ok: false, error: "Error actualizando el miembro del equipo"
         })
     }
-    
+
 
 
 });
+
+router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
+    try {
+        let EquipoBorrar = await Equipo.findById(req.params['id']);
+        if (EquipoBorrar.escudo && EquipoBorrar.escudo !== '') {
+            commons.deleteImagen('equipos/' + EquipoBorrar.escudo);
+        }
+        EquipoBorrar = await Equipo.findByIdAndRemove(req.params['id']);
+        if (EquipoBorrar) {
+            res.status(200)
+                .send({ ok: true, resultado: EquipoBorrar });
+        }
+    } catch (err) {
+        res.status(500).send({
+            ok: false, error: "Error eliminando el equipo"
+        });
+    }
+
+});
+
+router.delete('/:idEquipo/miembros_equipo/:idMiembro', autenticado.privilegiosAdmin, async (req, res) => {
+    try {
+        let EquipoMiembro = await Equipo.findById(req.params['idEquipo']);
+        let miembro = commons.obtenerItem(EquipoMiembro.miembros, req.params['idMiembro']);
+        if (miembro && miembro.foto && miembro.foto !== '') {
+            commons.deleteImagen('miembros_equipos/' + miembro.foto);
+        }
+        EquipoMiembro = await Equipo.findByIdAndUpdate(req.params['idEquipo'], {
+            $pull: {
+                miembros: { _id: req.params['idMiembro'] }
+            }
+        }, {
+            new: true
+        });
+        if (EquipoMiembro) {//Comprobamos si existía el comentario sino existía devolvería null
+            res.send({
+                ok: true, resultado: EquipoMiembro
+            })
+        } else {
+            res.status(400).send({
+                ok: false, error: "No existe el miembro del equipo"
+            })
+        }
+
+
+    } catch (err) {
+        res.status(500).send({
+            ok: false, error: 'Error borrando el miembro del equipo'
+        });
+    }
+});
+
 
 module.exports = router;

@@ -13,4 +13,21 @@ let protegerRuta = (req, res, next) => {
 
 };
 
-module.exports = protegerRuta;
+let privilegiosAdmin = (req, res, next) => {
+    if (req.headers['authorization']) {
+        let token = req.headers['authorization'].split(' ')[1];
+        let user = tokenFunctions.validarToken(token);
+        if (user) {
+            if (user.rol === 'ADMIN') {
+                next();
+            } else {
+                res.status(401).send({ ok: false, error: "Unauthorized" });
+            }
+        }
+        else
+            res.status(401).send({ ok: false, error: "Unauthorized" });
+    } else
+        res.status(401).send({ ok: false, error: "Unauthorized" });
+}
+
+module.exports = { protegerRuta, privilegiosAdmin };

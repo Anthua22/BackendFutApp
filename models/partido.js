@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
-const Equipo = require(__dirname + './equipo');
-const Usuario = require(__dirname + './usuario');
 
 
 let PartidoSchema = new mongoose.Schema({
-    equipo_local: Equipo,
-    equipo_visitante: Equipo,
-    arbitros: [Usuario], //Coloque este campo como array ya que dependiendo la categoría el número de árbitros varía
-    fecha: {
+    equipo_local: {type: mongoose.Schema.Types.ObjectId, ref: 'equipos'},
+    equipo_visitante: {type: mongoose.Schema.Types.ObjectId, ref: 'equipos'},
+    arbitro_principal: {type: mongoose.Schema.Types.ObjectId, ref: 'usuarios'},
+    arbitro_secundario:  {type: mongoose.Schema.Types.ObjectId, ref: 'usuarios'},
+    cronometrador:  {type: mongoose.Schema.Types.ObjectId, ref: 'usuarios'},
+    fecha_encuentro: {
         require: true,
         type: Date,
         min: moment().format('YYYY-MM-DD')
@@ -26,10 +26,14 @@ let PartidoSchema = new mongoose.Schema({
         type: String,
         trim:true
     },
-
     acta:{
         type:String,
         trim:true
+    },
+    fecha_modificacion: {
+        require: true,
+        type: Date,
+        min: moment().format('YYYY-MM-DD')
     }
 
 });

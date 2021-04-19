@@ -1,7 +1,7 @@
 const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
 const uploadImage = require(__dirname + './../utils/uploadImagen');
-const commons = require(__dirname+'./../utils/common');
+const commons = require(__dirname + './../utils/common');
 
 
 let router = express.Router();
@@ -28,7 +28,7 @@ router.get('/:id', (req, res) => {
             });
         }
     }).catch(err => {
-        res.status(400).send({
+        res.status(500).send({
             ok: false, error: "No se ha podido encontrar al equipo"
         });
     })
@@ -53,9 +53,9 @@ router.post('/', (req, res) => {
             });
         }).catch(err => {
             if (req.body.escudo && pathFoto !== '') {
-                commons.deleteImagen('equipos/'+pathFoto);
+                commons.deleteImagen('equipos' + pathFoto);
             }
-            commons.checkErrors(err,res);
+            commons.checkErrors(err, res);
         });
 
     } else {
@@ -104,13 +104,135 @@ router.post('/:idEquipo/miembro_equipo', (req, res) => {
             });
         }
     }).catch(err => {
-        commons.deleteImagen('miembros_equipos/'+pathFoto);
-        res.status(400).send({
+        commons.deleteImagen('miembros_equipos' + pathFoto);
+        res.status(500).send({
             ok: false, error: "Error insertando un nuevo miembro al equipo"
         })
     });
 });
 
+router.put('/:id', async (req, res) => {
+    let fotoNueva = '';
+    try {
+        if (req.body.nombre && req.body.categoria) {
+            if (req.body.escudo) {
+                fotoNueva = uploadImage(req.body.escudo, req.body.nombre, 'equipos').fileName;
+                const EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['id'], {
+                    $set: {
+                        nombre: req.body.nombre,
+                        categoria: req.body.categoria,
+                        direccion_campo: req.body.direccion_campo,
+                        escudo: fotoNueva
+                    }
+                }, {
+                    new: true
+                });
+                if (EquipoActualizado) {
+                    res.status(200).send({
+                        ok: true, resultado: EquipoActualizado
+                    });
+                } else {
+                    res.status(500).send({
+                        ok: false, resultado: "Error modificando el equipo"
+                    });
+                }
 
+            } else {
+                const EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['id'], {
+                    $set: {
+                        nombre: req.body.nombre_completo,
+                        categoria: req.body.categoria,
+                        direccion_campo: req.body.direccion_campo,
+                    }
+                }, {
+                    new: true
+                });
+                if (EquipoActualizado) {
+                    res.status(200).send({
+                        ok: true, resultado: EquipoActualizado
+                    });
+                } else {
+                    res.status(500).send({
+                        ok: false, resultado: "Error modificando el equipo"
+                    });
+                }
+            }
+
+        } else {
+            res.status(400).send({
+                ok: false, error: "Faltan campos por dar valor (nombre, email, categoria, direccion del campo)"
+            });
+        }
+    } catch (err) {
+        if (fotoNueva !== '') {
+            commons.deleteImagen('usuarios' + pathFoto);
+        }
+        res.status(500).send({
+            ok: false, error: "Error modificando el equipo " + err
+        });
+    }
+
+
+});
+
+router.patch('/:id/email', (req, res) => {
+    if (req.body.email) {
+        Equipo.findByIdAndUpdate(req.params['id'], {
+            $set: {
+                email: req.body.email,
+            }
+        }, {
+            new: true
+        }).then(x => {
+            if (x) {
+                res.status(200).send({
+                    ok: true, resultado: x
+                });
+            }
+        }).catch(err => {
+            commons.checkErrors(err, res);
+        });
+    } else {
+        res.status(400).send({
+            ok: false, error: "El campo email está vacío"
+        });
+    }
+
+});
+
+router.put('/:idEquipo/:idMiembro', async (req, res) => {
+    try{
+        let EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['idEquipo'], {
+            $pull: {
+                miembros: { _id: req.params['idMiembro'] }
+            }
+        }, {
+            new: true
+        });
+        if (EquipoActualizado) {//Comprobamos si existía el miembro del equipo sino existía devolvería null
+            EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['idEquipo'], {
+                $push: {
+                    miembros: req.body.miembro
+                }
+            }, {
+                new: true
+            });
+            res.status(200).send({
+                ok: true, resultado: EquipoActualizado
+            })
+        } else {
+            res.status(400).send({
+                ok: false, error: "No existe el miembro del equipo"
+            })
+        }
+    }catch(err){
+        res.status(500).send({
+            ok: false, error: "Error actualizando el miembro del equipo"
+        })
+    }
+    
+
+
+});
 
 module.exports = router;

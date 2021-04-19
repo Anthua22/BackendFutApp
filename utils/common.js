@@ -2,7 +2,7 @@ const fs = require('fs');
 
 
 let deleteImagen = (pathFoto) => {
-    const path = __dirname + './../uploads/images/' + pathFoto;
+    const path = __dirname + './../uploads/images/' + pathFoto+'/';
     if (fs.existsSync(path)) {
         fs.unlinkSync(path);
     }
@@ -23,7 +23,7 @@ let checkErrors = (err, res) => {
             ok: false, error: 'La contraseña debe contener al menos 8 digitos con al menos un carácter en mayúscula, uno en minúscula, un número y algún carácter especial'
         });
     } else {
-        res.status(400).send({
+        res.status(500).send({
             ok: false, error: 'Error introduciendo los datos'
         });
     }

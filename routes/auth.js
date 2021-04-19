@@ -23,7 +23,7 @@ router.post('/register', async (req, res) => {
                 ok: true, resultado: x
             });
         }).catch(err => {
-            commons.deleteImagen('usuarios/'+pathFoto);
+            commons.deleteImagen('usuarios'+pathFoto);
             commons.checkErrors(err, res);
         });
 

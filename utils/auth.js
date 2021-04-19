@@ -1,8 +1,8 @@
 const tokenFunctions = require(__dirname + '/token');
 
 let protegerRuta = (req, res, next) => {
-    let token = req.headers['authorization'].split(' ')[1];
-    if (token) {
+    if (req.headers['authorization']) {
+        let token = req.headers['authorization'].split(' ')[1];
         if (tokenFunctions.validarToken(token)) {
             next();
         }

@@ -2,7 +2,7 @@ const express = require('express');
 const Usuario = require(__dirname + './../models/usuario');
 const bcrypt = require(__dirname + './../utils/bcrypt');
 const uploadImage = require(__dirname + './../utils/uploadImagen');
-const fs = require('fs');
+const commons = require(__dirname+'./../utils/common');
 const token = require(__dirname + './../utils/token');
 
 let router = express.Router();
@@ -23,24 +23,8 @@ router.post('/register', async (req, res) => {
                 ok: true, resultado: x
             });
         }).catch(err => {
-            fs.unlinkSync(__dirname + "./../uploads/images/usuarios/" + pathFoto);
-            if (err.code === 11000) {
-                res.status(400).send({
-                    ok: false, error: 'El email introducido ya existe'
-                });
-            } else if (err.errors.email) {
-                res.status(400).send({
-                    ok: false, error: 'Formato de email incorrecto. Sintanxis: example@example.com'
-                });
-            } else if (err.errors.password) {
-                res.status(400).send({
-                    ok: false, error: 'La contraseña debe contener al menos 8 digitos con al menos un carácter en mayúscula, uno en minúscula, un número y algún carácter especial'
-                });
-            } else {
-                res.status(400).send({
-                    ok: false, error: 'Error introduciendo el usuario'
-                });
-            }
+            commons.deleteImagen('usuarios/'+pathFoto);
+            commons.checkErrors(err, res);
         });
 
     } else {

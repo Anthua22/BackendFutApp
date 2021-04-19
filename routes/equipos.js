@@ -1,7 +1,6 @@
 const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
 const uploadImage = require(__dirname + './../utils/uploadImagen');
-const fs = require('fs');
 const commons = require(__dirname+'./../utils/common');
 
 
@@ -25,12 +24,12 @@ router.get('/:id', (req, res) => {
             res.status(200).send({ ok: true, resultado: resultado })
         } else {
             res.status(400).send({
-                ok: false, error: "Producto no encontrado"
+                ok: false, error: "Equipo no encontrado"
             });
         }
     }).catch(err => {
         res.status(400).send({
-            ok: false, error: "Producto no encontrado"
+            ok: false, error: "No se ha podido encontrar al equipo"
         });
     })
 });
@@ -54,21 +53,9 @@ router.post('/', (req, res) => {
             });
         }).catch(err => {
             if (req.body.escudo && pathFoto !== '') {
-                fs.unlinkSync(__dirname + "./../uploads/images/" + pathFoto);
+                commons.deleteImagen('equipos/'+pathFoto);
             }
-            if (err.code === 11000) {
-                res.status(400).send({
-                    ok: false, error: 'El email del equipo introducido ya existe'
-                });
-            } else if (err.errors.email) {
-                res.status(400).send({
-                    ok: false, error: 'Formato de email incorrecto. Sintanxis: example@example.com'
-                });
-            } else {
-                res.status(400).send({
-                    ok: false, error: 'Error introduciendo el equipo'
-                });
-            }
+            commons.checkErrors(err,res);
         });
 
     } else {
@@ -117,8 +104,7 @@ router.post('/:idEquipo/miembro_equipo', (req, res) => {
             });
         }
     }).catch(err => {
-        console.log(err)
-        commons('miembros_equipos/'+pathFoto);
+        commons.deleteImagen('miembros_equipos/'+pathFoto);
         res.status(400).send({
             ok: false, error: "Error insertando un nuevo miembro al equipo"
         })

@@ -17,7 +17,7 @@ let app = express();
 // Carga de middleware y enrutadores
 app.use(express.json());
 app.use('/auth',auth);
-app.use('/equipos',autenticado.protegerRuta,equipos);
+app.use('/equipos',autenticado.rutaProtegida,equipos);
 app.use('/partidos',partidos);
 
 // Puesta en marcha del servidor

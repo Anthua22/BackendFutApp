@@ -33,7 +33,7 @@ let checkErrorsPartido = (err, res) => {
     const fechaActual = moment().format('YYYY-MM-DD');
     if (err.errors.fecha_encuentro) {
         res.status(400).send({
-            ok: false, error: 'Formato de fecha incorrecta (YYYY-MM-DD) o tiene que ser superior a la fecha '+fechaActual
+            ok: false, error: 'Formato de fecha incorrecta (YYYY-MM-DD) o tiene que ser superior a la fecha ' + fechaActual
         });
     } else if (err.errors.arbitro_principal || err.errors.arbitro_secundario || err.errors.cronometrador) {
         res.status(400).send({
@@ -54,10 +54,10 @@ let checkErrorsPartido = (err, res) => {
     }
 }
 
-let obtenerItem = (array, id) =>{
+let obtenerItem = (array, id) => {
     let item = null;
     array.forEach(x => {
-        if(x._id+''===id+''){
+        if (x._id + '' === id + '') {
             item = x;
             return;
         }
@@ -66,9 +66,23 @@ let obtenerItem = (array, id) =>{
     return item;
 }
 
+let borrarFotosMiembrosClub = equipo => {
+    equipo.miembros.forEach(x => {
+        if (x.foto && x.foto !== '') {
+            deleteImagen('miembros_equipos/'+x.foto);
+        }
+    })
+}
+
+const GOOGLE_CLIENT_ID = "763516909829-5p7538slp0m1j5a2jr22c88cuisi6gdl.apps.googleusercontent.com";
+const GOOGLE_CLIENT_SECRET = "C3B5uld4P1zFa5CuVEfhqRqq";
+
 module.exports = {
     deleteImagen,
     checkErrors,
     checkErrorsPartido,
-    obtenerItem
+    obtenerItem,
+    borrarFotosMiembrosClub,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET
 }

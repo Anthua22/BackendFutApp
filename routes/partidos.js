@@ -19,15 +19,10 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', autenticado.protegerRuta, (req, res) => {
+router.get('/:id', autenticado.rutaProtegida, (req, res) => {
     Partido.findById(req.params['id']).then(x => {
-        if (x) {
-            res.status(200).send({ ok: true, resultado: x })
-        } else {
-            res.status(400).send({
-                ok: false, error: "Partido no encontrado"
-            });
-        }
+        res.status(200).send({ ok: true, resultado: x })
+
     }).catch(err => {
         res.status(500).send({
             ok: false, error: "No se ha podido encontrar al equipo"
@@ -35,7 +30,7 @@ router.get('/:id', autenticado.protegerRuta, (req, res) => {
     });
 });
 
-router.post('/', autenticado.privilegiosAdmin, (req, res) => {
+router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, res) => {
     if (req.body.equipo_local, req.body.equipo_visitante, req.body.arbitro_principal, req.body.fecha_encuentro, req.body.categoria, req.body.lugar_encuentro) {
         let newPartido = new Partido({
             equipo_local: req.body.equipo_local,
@@ -45,6 +40,8 @@ router.post('/', autenticado.privilegiosAdmin, (req, res) => {
             cronometrador: req.body.cronometrador,
             fecha_encuentro: req.body.fecha_encuentro,
             categoria: req.body.categoria,
+            lt: req.body.lt,
+            ln: req.body.ln,
             lugar_encuentro: req.body.lugar_encuentro
         });
 
@@ -67,12 +64,44 @@ router.post('/categoria', (req, res) => {
         } else {
             res.status(400).send({ ok: false, error: 'No se han encontrado partidos de la categoría especificada' })
         }
-    }).catch(err => {
+    }).catch(() => {
         res.status(500).send({
             ok: false, error: 'No se han podido obtener los partidos'
         });
     })
 });
+
+router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, res) => {
+    Partido.findByIdAndUpdate(req.params['id'], {
+        $set: {
+            equipo_local: req.body.equipo_local,
+            equipo_visitante: req.body.equipo_visitante,
+            arbitro_principal: req.body.arbitro_principal,
+            arbitro_secundario: req.body.arbitro_secundario,
+            cronometrador: req.body.cronometrador,
+            lugar_encuentro: req.body.lugar_encuentro,
+            lt: req.body.lt,
+            ln: req.body.ln,
+            fecha_encuentro: req.body.fecha_encuentro
+
+        }
+    }, {
+        new: true
+    }).then(x => {
+        res.status(200).send({
+            ok: true, resultado: x
+        });
+
+    }).catch(() => {
+        res.status(500).send({
+            ok: false, error: "No se ha encontrado al equipo"
+        });
+    })
+});
+
+router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res)=>{
+    
+})
 
 
 

@@ -3,11 +3,11 @@ const moment = require('moment');
 
 
 let PartidoSchema = new mongoose.Schema({
-    equipo_local: {type: mongoose.Schema.Types.ObjectId, ref: 'equipos'},
-    equipo_visitante: {type: mongoose.Schema.Types.ObjectId, ref: 'equipos'},
-    arbitro_principal: {type: mongoose.Schema.Types.ObjectId, ref: 'usuarios'},
-    arbitro_secundario:  {type: mongoose.Schema.Types.ObjectId, ref: 'usuarios'},
-    cronometrador:  {type: mongoose.Schema.Types.ObjectId, ref: 'usuarios'},
+    equipo_local: { type: mongoose.Schema.Types.ObjectId, ref: 'equipos' },
+    equipo_visitante: { type: mongoose.Schema.Types.ObjectId, ref: 'equipos' },
+    arbitro_principal: { type: mongoose.Schema.Types.ObjectId, ref: 'usuarios' },
+    arbitro_secundario: { type: mongoose.Schema.Types.ObjectId, ref: 'usuarios' },
+    cronometrador: { type: mongoose.Schema.Types.ObjectId, ref: 'usuarios' },
     fecha_encuentro: {
         require: true,
         type: Date,
@@ -20,15 +20,23 @@ let PartidoSchema = new mongoose.Schema({
         enum: ['Primera', 'Segunda', 'Segunda B', 'Tercera', 'Regional', 'Futbol Base', 'Sin Categoria'],
         default: 'Sin Categoria'
     },
+    lt: {
+        type: Number,
+        default: 0
+    },
+    ln: {
+        type: Number,
+        default: 0
+    },
 
     lugar_encuentro: {
         require: false,
         type: String,
-        trim:true
+        trim: true
     },
-    acta:{
-        type:String,
-        trim:true
+    acta: {
+        type: String,
+        trim: true
     },
     fecha_modificacion: {
         require: true,
@@ -38,5 +46,5 @@ let PartidoSchema = new mongoose.Schema({
 
 });
 
-let Partido = mongoose.model('partidos',PartidoSchema);
+let Partido = mongoose.model('partidos', PartidoSchema);
 module.exports = Partido;

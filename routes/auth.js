@@ -4,6 +4,7 @@ const bcrypt = require(__dirname + './../utils/bcrypt');
 const uploadImage = require(__dirname + './../utils/uploadImagen');
 const commons = require(__dirname+'./../utils/common');
 const token = require(__dirname + './../utils/token');
+const common  = require('./../utils/common')
 
 let router = express.Router();
 
@@ -57,6 +58,26 @@ router.post('/login', (req, res) => {
         }
 
     })
+});
+
+router.post('/google',(req, res)=>{
+
 })
 
+
+function getGoogleAuthURL() {
+    /*
+     * Generate a url that asks permissions to the user's email and profile
+     */
+    const scopes = [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email',
+    ];
+
+    return oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      prompt: 'consent',
+      scope: scopes, // If you only need one scope you can pass it as string
+    });
+  }
 module.exports = router;

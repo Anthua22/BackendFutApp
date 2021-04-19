@@ -153,7 +153,7 @@ router.put('/:id', async (req, res) => {
                     });
                 } else {
                     res.status(500).send({
-                        ok: false, resultado: "Error modificando el equipo"
+                        ok: false, error: "Error modificando el equipo"
                     });
                 }
             }
@@ -168,7 +168,7 @@ router.put('/:id', async (req, res) => {
             commons.deleteImagen('miembros_equipos/' + pathFoto);
         }
         res.status(500).send({
-            ok: false, error: "Error modificando el equipo " + err
+            ok: false, error: "Error actualizando el equipo"
         });
     }
 
@@ -241,12 +241,14 @@ router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
         if (EquipoBorrar.escudo && EquipoBorrar.escudo !== '') {
             commons.deleteImagen('equipos/' + EquipoBorrar.escudo);
         }
+        commons.borrarFotosMiembrosClub(EquipoBorrar);
         EquipoBorrar = await Equipo.findByIdAndRemove(req.params['id']);
         if (EquipoBorrar) {
             res.status(200)
                 .send({ ok: true, resultado: EquipoBorrar });
         }
     } catch (err) {
+        console.log(err)
         res.status(500).send({
             ok: false, error: "Error eliminando el equipo"
         });

@@ -1,6 +1,6 @@
 const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
-const uploadImage = require(__dirname + './../utils/uploadImagen');
+const upload = require(__dirname + './../utils/uploads');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');
 
@@ -44,7 +44,7 @@ router.post('/', (req, res) => {
         });
         let pathFoto = '';
         if (req.body.escudo) {
-            pathFoto = uploadImage(req.body.escudo, req.body.nombre, 'equipos').fileName;
+            pathFoto = upload.storage(req.body.escudo, req.body.nombre, 'equipos').fileName;
             newEquipo.escudo = pathFoto;
         }
         newEquipo.save().then(resultado => {
@@ -84,7 +84,7 @@ router.post('/categoria', (req, res) => {
 router.post('/:idEquipo/miembros_equipo', (req, res) => {
 
     let newMiembro = req.body.miembro;
-    const pathFoto = uploadImage(req.body.miembro.foto, req.body.miembro.nombre_completo, 'miembros_equipos').fileName;
+    const pathFoto = upload.storage(req.body.miembro.foto, req.body.miembro.nombre_completo, 'miembros_equipos').fileName;
     newMiembro.foto = pathFoto;
 
     Equipo.findByIdAndUpdate(req.params['idEquipo'], {
@@ -116,7 +116,7 @@ router.put('/:id', async (req, res) => {
     try {
         if (req.body.nombre && req.body.categoria) {
             if (req.body.escudo) {
-                fotoNueva = uploadImage(req.body.escudo, req.body.nombre, 'equipos').fileName;
+                fotoNueva = upload.storage(req.body.escudo, req.body.nombre, 'equipos').fileName;
                 const EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['id'], {
                     $set: {
                         nombre: req.body.nombre,

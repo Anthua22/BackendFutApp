@@ -28,6 +28,10 @@ let PartidoSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    jornada:{
+        require:true,
+        type: Number
+    },
 
     lugar_encuentro: {
         require: false,

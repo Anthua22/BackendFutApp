@@ -2,6 +2,8 @@ const express = require('express');
 const Partido = require(__dirname + './../models/partido');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');
+const upload = require(__dirname+'./../utils/uploads');
+
 
 let router = express.Router();
 
@@ -99,7 +101,7 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
     })
 });
 
-router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res)=>{
+router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
     
 })
 

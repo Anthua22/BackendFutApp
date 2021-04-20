@@ -5,7 +5,7 @@ const key = "secretoNode";
 let generarToken = user => {
     return jwt.sign({
         id: user._id,
-        nombre: user.nombre_completo,
+        nombre_completo: user.nombre_completo,
         rol: user.rol
     }, key);
 };

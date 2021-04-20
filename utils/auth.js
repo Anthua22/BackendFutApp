@@ -14,6 +14,7 @@ let rutaProtegida = (req, res, next) => {
 };
 
 let privilegiosAdmin = (req, res, next) => {
+    let token = req.headers['authorization'].split(' ')[1];
     let user = tokenFunctions.validarToken(token);
     if (user) {
         if (user.rol === 'ADMIN') {

@@ -131,6 +131,27 @@ router.patch('/me/avatar', async (req, res) => {
     }
 });
 
+router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
+    try {
+        let usuarioBorrar = await User.findById(req.params['id']);
+        if (usuarioBorrar.avatar && usuarioBorrar.avatar !== '') {
+            commons.deleteImagen('usuarios/' + usuarioBorrar.avatar);
+        }
+
+        usuarioBorrar = await User.findByIdAndRemove(req.params['id']);
+        if (usuarioBorrar) {
+            res.status(200)
+                .send({ resultado: usuarioBorrar });
+        }
+
+    } catch (err) {
+        res.status(500).send({
+            error: "No existe el usuario/árbitro"
+        });
+    }
+
+})
+
 
 
 

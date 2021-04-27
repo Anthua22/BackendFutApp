@@ -11,7 +11,7 @@ let router = express.Router();
 
 router.post('/register', async (req, res) => {
     if (req.body.password && req.body.nombre_completo && req.body.email) {
-        const pathFoto = upload.storage(req.body.avatar, req.body.nombre_completo, 'usuarios').fileName;
+        const pathFoto = upload.storage(req.body.foto, req.body.nombre_completo, 'usuarios').fileName;
         let newUser = new Usuario({
             nombre_completo: req.body.nombre_completo,
             email: req.body.email,

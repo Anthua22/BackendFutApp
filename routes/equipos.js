@@ -248,7 +248,6 @@ router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
                 .send({ resultado: EquipoBorrar });
         }
     } catch (err) {
-        console.log(err)
         res.status(500).send({
             error: "Error eliminando el equipo"
         });

@@ -29,7 +29,7 @@ let UsuarioSchema = new mongoose.Schema({
         min: 8
     },
 
-    avatar: {
+    foto: {
         require: true,
         type: String,
         trim: true

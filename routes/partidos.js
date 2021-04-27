@@ -2,16 +2,22 @@ const express = require('express');
 const Partido = require(__dirname + './../models/partido');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');
-
+const moment = require('moment');
 
 let router = express.Router();
 
 router.get('/', (req, res) => {
-    Partido.find().populate('equipo_local').populate('equipo_visitante').then(x => {
+    Partido.find().populate('equipo_local')
+    .populate('equipo_visitante')
+    .populate('arbitro_principal')
+    .populate('arbitro_secundario')
+    .populate('cronometrador')
+    .sort({ fecha_modificacion: -1 })
+    .then(x => {
         if (x.length > 0) {
             res.send({ resultado: x });
         } else {
-            res.status(500).send({ error: 'No hay ningún partido disputado' });
+            res.status(500).send({ error: 'No hay ningún partido' });
         }
     }).catch(err => {
         console.log(err)
@@ -106,6 +112,7 @@ router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa
     Partido.findByIdAndUpdate(req.params['id'], {
         $set: {
             acta: req.body.acta,
+            fecha_modificacion: moment().format('YYYY-MM-DD')
         }
     }, {
         new: true
@@ -119,7 +126,22 @@ router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa
             error: "No se ha encontrado al equipo"
         });
     })
-})
+});
+
+router.delete('/:id', async(req, res)=>{
+  try {
+    let partidoBorrar = await Equipo.findByIdAndRemove(req.params['id']);
+    if (partidoBorrar) {
+        res.status(200)
+            .send({ resultado: EquipoBorrar });
+    }
+} catch (err) {
+    res.status(500).send({
+        error: "No se ha encontrado el equipo a encontrar"
+    });
+}
+
+});
 
 
 

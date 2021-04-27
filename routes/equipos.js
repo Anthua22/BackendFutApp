@@ -249,7 +249,7 @@ router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
         }
     } catch (err) {
         res.status(500).send({
-            error: "Error eliminando el equipo"
+            error: "No se ha encontrado el equipo"
         });
     }
 

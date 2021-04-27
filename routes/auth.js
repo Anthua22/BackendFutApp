@@ -11,7 +11,7 @@ let router = express.Router();
 
 router.post('/register', async (req, res) => {
     if (req.body.password && req.body.nombre_completo && req.body.email) {
-        const pathFoto = upload.storage(req.body.foto, req.body.nombre_completo, 'usuarios').fileName;
+        const pathFoto = upload.storage(req.body.avatar, req.body.nombre_completo, 'usuarios').fileName;
         let newUser = new Usuario({
             nombre_completo: req.body.nombre_completo,
             email: req.body.email,
@@ -58,6 +58,8 @@ router.post('/login', (req, res) => {
             });
         }
 
+    }).catch(err=>{
+        console.log(err)
     })
 });
 
@@ -74,8 +76,8 @@ router.post('/google', async (req, res) => {
     
         if (email) {
             let User = new Usuario({
-                nombre_completo: req.body.nombre_completo,
-                email: req.body.email,
+                nombre_completo: payload.name,
+                email: payload.email,
                 password: await bcrypt.encriptar(''),
                 avatar: payload.picture
             });

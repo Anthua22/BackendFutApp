@@ -2,19 +2,20 @@ const express = require('express');
 const Partido = require(__dirname + './../models/partido');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');
-const upload = require(__dirname+'./../utils/uploads');
 
 
 let router = express.Router();
 
 router.get('/', (req, res) => {
-    Partido.find({ disputado: true }).sort({ fecha_modificacion: -1 }).limit(12).then(x => {
+    Partido.find().populate('equipo_local').populate('equipo_visitante').then(x => {
+        console.log(x)
         if (x.length > 0) {
-            res.send({ ok: true, resultado: resultado });
+            res.send({ ok: true, resultado: x });
         } else {
             res.status(500).send({ ok: false, error: 'No hay ningún partido disputado' });
         }
     }).catch(err => {
+        console.log(err)
         res.status(500).send({
             ok: false, error: 'No se han podido obtener los partidos'
         });
@@ -33,7 +34,8 @@ router.get('/:id', autenticado.rutaProtegida, (req, res) => {
 });
 
 router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, res) => {
-    if (req.body.equipo_local, req.body.equipo_visitante, req.body.arbitro_principal, req.body.fecha_encuentro, req.body.categoria, req.body.lugar_encuentro) {
+    if (req.body.equipo_local && req.body.equipo_visitante && req.body.arbitro_principal && req.body.fecha_encuentro && req.body.categoria && req.body.lugar_encuentro) {
+        console.log(req.body.equipo_visitante)
         let newPartido = new Partido({
             equipo_local: req.body.equipo_local,
             equipo_visitante: req.body.equipo_visitante,
@@ -98,11 +100,26 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
         res.status(500).send({
             ok: false, error: "No se ha encontrado al equipo"
         });
-    })
+    });
 });
 
-router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
-    
+router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {  
+    Partido.findByIdAndUpdate(req.params['id'], {
+        $set: {
+            acta: req.body.acta,
+        }
+    }, {
+        new: true
+    }).then(x => {
+        res.status(200).send({
+            ok: true, resultado: x
+        });
+
+    }).catch(() => {
+        res.status(500).send({
+            ok: false, error: "No se ha encontrado al equipo"
+        });
+    })
 })
 
 

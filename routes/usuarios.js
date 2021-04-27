@@ -64,7 +64,8 @@ router.put('/:id', autenticado.privilegiosAdmin, (req, res) => {
 });
 
 router.put('/me', (req, res) => {
-    User.findByIdAndUpdate(req.params['id'], {
+    let userToken = tokenFunctions.validarToken(req.headers['authorization'].split(' ')[1]);
+    User.findByIdAndUpdate(userToken.id, {
         $set: {
             nombre_completo: req.body.nombre_completo,
             email: req.body.email,

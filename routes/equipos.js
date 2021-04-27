@@ -241,7 +241,7 @@ router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
         if (EquipoBorrar.escudo && EquipoBorrar.escudo !== '') {
             commons.deleteImagen('equipos/' + EquipoBorrar.escudo);
         }
-        commons.borrarFotosMiembrosClub(EquipoBorrar);
+        await commons.borrarFotosMiembrosClub(EquipoBorrar);
         EquipoBorrar = await Equipo.findByIdAndRemove(req.params['id']);
         if (EquipoBorrar) {
             res.status(200)

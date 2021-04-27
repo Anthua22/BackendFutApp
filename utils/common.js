@@ -67,11 +67,19 @@ let obtenerItem = (array, id) => {
 }
 
 let borrarFotosMiembrosClub = equipo => {
-    equipo.miembros.forEach(x => {
-        if (x.foto && x.foto !== '') {
-            deleteImagen('miembros_equipos/'+x.foto);
-        }
+    return new Promise((resolve, reject) => {
+        try {
+            equipo.miembros.forEach(x => {
+                if (x.foto && x.foto !== '') {
+                    deleteImagen('miembros_equipos/' + x.foto);
+                }
+            });
+            resolve();
+        } catch (err) {
+            reject(err);
+        }   
     })
+    
 }
 
 const GOOGLE_CLIENT_ID = "763516909829-5p7538slp0m1j5a2jr22c88cuisi6gdl.apps.googleusercontent.com";

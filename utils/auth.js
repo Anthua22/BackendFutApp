@@ -29,6 +29,7 @@ let privilegiosAdmin = (req, res, next) => {
 }
 
 let privilegiosActa = (req, res, next) => {
+    let token = req.headers['authorization'].split(' ')[1];
     let user = tokenFunctions.validarToken(token);
     if (user) {
         if (user.rol === 'ADMIN' || user._id === req.body.arbitro_principal ||
@@ -41,4 +42,17 @@ let privilegiosActa = (req, res, next) => {
     }
 
 }
-module.exports = { rutaProtegida, privilegiosAdmin, privilegiosActa };
+
+let peticionesLocalHost = (req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+    // Request methods you wish to allow
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+}
+module.exports = { rutaProtegida, privilegiosAdmin, privilegiosActa, peticionesLocalHost };

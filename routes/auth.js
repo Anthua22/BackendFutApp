@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
         });
         newUser.save().then(x => {
             res.status(201).send({
-                ok: true, resultado: x
+                resultado: x
             });
         }).catch(err => {
             commons.deleteImagen('usuarios/' + pathFoto);
@@ -44,21 +44,21 @@ router.post('/login', (req, res) => {
             bcrypt.desincriptar(req.body.password, x.password).then(bool => {
                 if (bool === true) {
                     res.status(200).send({
-                        ok: true, token: token.generarToken(x)
+                        token: token.generarToken(x)
                     });
                 } else {
                     res.status(401).send({
-                        ok: false, error: 'Contraseña incorrecta'
+                        error: 'Contraseña incorrecta'
                     });
                 }
             });
         } else {
             res.status(401).send({
-                ok: false, error: 'No se ha encontrado el usuario con el email: ' + req.body.email
+                error: 'No se ha encontrado el usuario con el email: ' + req.body.email
             });
         }
 
-    }).catch(err=>{
+    }).catch(err => {
         console.log(err)
     })
 });
@@ -70,10 +70,10 @@ router.post('/google', async (req, res) => {
             idToken: req.body.token,
             audience: commons.GOOGLE_CLIENT_ID
         });
-    
+
         const payload = ticket.getPayload();
         const email = payload.email;
-    
+
         if (email) {
             let User = new Usuario({
                 nombre_completo: payload.name,
@@ -81,19 +81,19 @@ router.post('/google', async (req, res) => {
                 password: await bcrypt.encriptar(''),
                 avatar: payload.picture
             });
-    
+
             let newUser = await User.save();
-    
+
             res.status(201).send({
-                ok: true, token: token.generarToken(newUser)
+                token: token.generarToken(newUser)
             });
         }
     } catch (err) {
         res.status(500).send({
-            ok: false, error: 'No se ha podido loguear con google'
+            error: 'No se ha podido loguear con google'
         });
     }
-   
+
 })
 
 

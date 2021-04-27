@@ -9,11 +9,11 @@ let router = express.Router();
 router.get('/', (req, res) => {
     Equipo.find().then(resultado => {
         res.status(200).send({
-            ok: true, resultado: resultado
+            resultado: resultado
         });
     }).catch(err => {
         res.status(500).send({
-            ok: false, error: 'No se han podido obtener los equipos'
+            error: 'No se han podido obtener los equipos'
         });
     });
 });
@@ -21,15 +21,15 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     Equipo.findById(req.params['id']).then(resultado => {
         if (resultado) {
-            res.status(200).send({ ok: true, resultado: resultado })
+            res.status(200).send({ resultado: resultado })
         } else {
             res.status(400).send({
-                ok: false, error: "Equipo no encontrado"
+                error: "Equipo no encontrado"
             });
         }
     }).catch(err => {
         res.status(500).send({
-            ok: false, error: "No se ha podido encontrar al equipo"
+            error: "No se ha podido encontrar al equipo"
         });
     })
 });
@@ -49,7 +49,7 @@ router.post('/', (req, res) => {
         }
         newEquipo.save().then(resultado => {
             res.status(201).send({
-                ok: true, resultado: resultado
+                resultado: resultado
             });
         }).catch(err => {
             if (req.body.escudo && pathFoto !== '') {
@@ -60,7 +60,7 @@ router.post('/', (req, res) => {
 
     } else {
         res.status(400).send({
-            ok: false, error: 'Los campos nombre del equipo, email y dirección de campo son obligatorios'
+            error: 'Los campos nombre del equipo, email y dirección de campo son obligatorios'
         });
     }
 
@@ -69,9 +69,9 @@ router.post('/', (req, res) => {
 router.post('/categoria', (req, res) => {
     Equipo.find({ categoria: req.body.categoria }).then(resultado => {
         if (resultado.length > 0) {
-            res.send({ ok: true, resultado: resultado });
+            res.send({ resultado: resultado });
         } else {
-            res.status(500).send({ ok: false, error: 'No se han encontrado equipos en la categoría especificada' })
+            res.status(500).send({ error: 'No se han encontrado equipos en la categoría especificada' })
         }
 
     }).catch(err => {
@@ -96,17 +96,17 @@ router.post('/:idEquipo/miembros_equipo', (req, res) => {
     }).then(x => {
         if (x) {
             res.status(201).send({
-                ok: true, resultado: x
+                resultado: x
             });
         } else {
             res.status(400).send({
-                ok: false, error: "No existe el equipo"
+                error: "No existe el equipo"
             });
         }
     }).catch(err => {
         commons.deleteImagen('miembros_equipos/' + pathFoto);
         res.status(500).send({
-            ok: false, error: "Error insertando un nuevo miembro al equipo"
+            error: "Error insertando un nuevo miembro al equipo"
         })
     });
 });
@@ -129,11 +129,11 @@ router.put('/:id', async (req, res) => {
                 });
                 if (EquipoActualizado) {
                     res.status(200).send({
-                        ok: true, resultado: EquipoActualizado
+                        resultado: EquipoActualizado
                     });
                 } else {
                     res.status(500).send({
-                        ok: false, resultado: "Error modificando el equipo"
+                        resultado: "Error modificando el equipo"
                     });
                 }
 
@@ -149,18 +149,18 @@ router.put('/:id', async (req, res) => {
                 });
                 if (EquipoActualizado) {
                     res.status(200).send({
-                        ok: true, resultado: EquipoActualizado
+                        resultado: EquipoActualizado
                     });
                 } else {
                     res.status(500).send({
-                        ok: false, error: "Error modificando el equipo"
+                        error: "Error modificando el equipo"
                     });
                 }
             }
 
         } else {
             res.status(400).send({
-                ok: false, error: "Faltan campos por dar valor (nombre, email, categoria, direccion del campo)"
+                error: "Faltan campos por dar valor (nombre, email, categoria, direccion del campo)"
             });
         }
     } catch (err) {
@@ -168,7 +168,7 @@ router.put('/:id', async (req, res) => {
             commons.deleteImagen('miembros_equipos/' + pathFoto);
         }
         res.status(500).send({
-            ok: false, error: "Error actualizando el equipo"
+            error: "Error actualizando el equipo"
         });
     }
 
@@ -186,7 +186,7 @@ router.patch('/:id/email', (req, res) => {
         }).then(x => {
             if (x) {
                 res.status(200).send({
-                    ok: true, resultado: x
+                    resultado: x
                 });
             }
         }).catch(err => {
@@ -194,7 +194,7 @@ router.patch('/:id/email', (req, res) => {
         });
     } else {
         res.status(400).send({
-            ok: false, error: "El campo email está vacío"
+            error: "El campo email está vacío"
         });
     }
 
@@ -218,16 +218,16 @@ router.put('/:idEquipo/:idMiembro', async (req, res) => {
                 new: true
             });
             res.status(200).send({
-                ok: true, resultado: EquipoActualizado
+                resultado: EquipoActualizado
             })
         } else {
             res.status(400).send({
-                ok: false, error: "No existe el miembro del equipo"
+                error: "No existe el miembro del equipo"
             })
         }
     } catch (err) {
         res.status(500).send({
-            ok: false, error: "Error actualizando el miembro del equipo"
+            error: "Error actualizando el miembro del equipo"
         })
     }
 
@@ -245,12 +245,12 @@ router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
         EquipoBorrar = await Equipo.findByIdAndRemove(req.params['id']);
         if (EquipoBorrar) {
             res.status(200)
-                .send({ ok: true, resultado: EquipoBorrar });
+                .send({ resultado: EquipoBorrar });
         }
     } catch (err) {
         console.log(err)
         res.status(500).send({
-            ok: false, error: "Error eliminando el equipo"
+            error: "Error eliminando el equipo"
         });
     }
 
@@ -272,18 +272,18 @@ router.delete('/:idEquipo/miembros_equipo/:idMiembro', autenticado.privilegiosAd
         });
         if (EquipoMiembro) {//Comprobamos si existía el comentario sino existía devolvería null
             res.send({
-                ok: true, resultado: EquipoMiembro
+                resultado: EquipoMiembro
             })
         } else {
             res.status(400).send({
-                ok: false, error: "No existe el miembro del equipo"
+                error: "No existe el miembro del equipo"
             })
         }
 
 
     } catch (err) {
         res.status(500).send({
-            ok: false, error: 'Error borrando el miembro del equipo'
+            error: 'Error borrando el miembro del equipo'
         });
     }
 });

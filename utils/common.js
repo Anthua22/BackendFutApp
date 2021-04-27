@@ -12,19 +12,19 @@ let deleteImagen = (pathFoto) => {
 let checkErrors = (err, res) => {
     if (err.code === 11000) {
         res.status(400).send({
-            ok: false, error: 'El email introducido ya existe'
+            error: 'El email introducido ya existe'
         });
     } else if (err.errors.email) {
         res.status(400).send({
-            ok: false, error: 'Formato de email incorrecto. Sintanxis: example@example.com'
+            error: 'Formato de email incorrecto. Sintanxis: example@example.com'
         });
     } else if (err.errors.password) {
         res.status(400).send({
-            ok: false, error: 'La contraseña debe contener al menos 8 digitos con al menos un carácter en mayúscula, uno en minúscula, un número y algún carácter especial'
+            error: 'La contraseña debe contener al menos 8 digitos con al menos un carácter en mayúscula, uno en minúscula, un número y algún carácter especial'
         });
     } else {
         res.status(500).send({
-            ok: false, error: 'Error introduciendo los datos'
+             error: 'Error introduciendo los datos'
         });
     }
 }
@@ -33,7 +33,7 @@ let checkErrorsPartido = (err, res) => {
     const fechaActual = moment().format('YYYY-MM-DD');
     if (err.errors.fecha_encuentro) {
         res.status(400).send({
-            ok: false, error: 'Formato de fecha incorrecta (YYYY-MM-DD) o tiene que ser superior a la fecha ' + fechaActual
+          error: 'Formato de fecha incorrecta (YYYY-MM-DD) o tiene que ser superior a la fecha ' + fechaActual
         });
     } else if (err.errors.arbitro_principal || err.errors.arbitro_secundario || err.errors.cronometrador) {
         res.status(400).send({

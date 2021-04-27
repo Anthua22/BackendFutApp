@@ -8,27 +8,26 @@ let router = express.Router();
 
 router.get('/', (req, res) => {
     Partido.find().populate('equipo_local').populate('equipo_visitante').then(x => {
-        console.log(x)
         if (x.length > 0) {
-            res.send({ ok: true, resultado: x });
+            res.send({ resultado: x });
         } else {
-            res.status(500).send({ ok: false, error: 'No hay ningún partido disputado' });
+            res.status(500).send({ error: 'No hay ningún partido disputado' });
         }
     }).catch(err => {
         console.log(err)
         res.status(500).send({
-            ok: false, error: 'No se han podido obtener los partidos'
+            error: 'No se han podido obtener los partidos'
         });
     });
 });
 
 router.get('/:id', autenticado.rutaProtegida, (req, res) => {
     Partido.findById(req.params['id']).then(x => {
-        res.status(200).send({ ok: true, resultado: x })
+        res.status(200).send({ resultado: x })
 
     }).catch(err => {
         res.status(500).send({
-            ok: false, error: "No se ha podido encontrar al equipo"
+            error: "No se ha podido encontrar al equipo"
         });
     });
 });
@@ -50,13 +49,13 @@ router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, 
         });
 
         newPartido.save().then(x => {
-            res.send({ ok: true, resultado: x });
+            res.send({ resultado: x });
         }).catch(err => {
             commons.checkErrorsPartido(err, res);
         });
     } else {
         res.status(400).send({
-            ok: false, error: 'Los campos equipo local, equipo visitante, árbitro principal, categoría del partido, lugar del encuentro y fecha del encuentro son obligatorios'
+            error: 'Los campos equipo local, equipo visitante, árbitro principal, categoría del partido, lugar del encuentro y fecha del encuentro son obligatorios'
         });
     }
 });
@@ -64,13 +63,13 @@ router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, 
 router.post('/categoria', (req, res) => {
     Partido.find({ categoria: req.body.categoria }).then(result => {
         if (result.length > 0) {
-            res.send({ ok: true, resultado: result });
+            res.send({ resultado: result });
         } else {
-            res.status(400).send({ ok: false, error: 'No se han encontrado partidos de la categoría especificada' })
+            res.status(400).send({ error: 'No se han encontrado partidos de la categoría especificada' })
         }
     }).catch(() => {
         res.status(500).send({
-            ok: false, error: 'No se han podido obtener los partidos'
+            error: 'No se han podido obtener los partidos'
         });
     })
 });
@@ -93,17 +92,17 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
         new: true
     }).then(x => {
         res.status(200).send({
-            ok: true, resultado: x
+            resultado: x
         });
 
     }).catch(() => {
         res.status(500).send({
-            ok: false, error: "No se ha encontrado al equipo"
+            error: "No se ha encontrado al equipo"
         });
     });
 });
 
-router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {  
+router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
     Partido.findByIdAndUpdate(req.params['id'], {
         $set: {
             acta: req.body.acta,
@@ -112,12 +111,12 @@ router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa
         new: true
     }).then(x => {
         res.status(200).send({
-            ok: true, resultado: x
+            resultado: x
         });
 
     }).catch(() => {
         res.status(500).send({
-            ok: false, error: "No se ha encontrado al equipo"
+            error: "No se ha encontrado al equipo"
         });
     })
 })

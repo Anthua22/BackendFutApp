@@ -11,10 +11,10 @@ let router = express.Router();
 router.get('/', (req, res) => {
     User.find().then(result => {
         res.status(200).send({
-            ok: true, resultado: result
+            resultado: result
         });
     }).catch(() => {
-        res.status(500).send({ ok: false, error: "No se han podido obtener los usuarios" });
+        res.status(500).send({ error: "No se han podido obtener los usuarios" });
     })
 })
 
@@ -25,10 +25,10 @@ router.get('/me', async (req, res) => {
         let userLogueado = await User.findById(userToken.id);
 
         res.status(200).send({
-            ok: true, resultado: userLogueado
+            resultado: userLogueado
         });
     } catch (err) {
-        res.status(500).send({ ok: false, error: "Error obteniendo el usuario logueado" });
+        res.status(500).send({ error: "Error obteniendo el usuario logueado" });
     }
 
 });
@@ -36,10 +36,10 @@ router.get('/me', async (req, res) => {
 router.get('/:id', (req, res) => {
     User.findById(req.params['id']).then(x => {
         res.status(200).send({
-            ok: true, resultado: x
+            resultado: x
         });
     }).catch(() => {
-        res.status(500).send({ ok: false, error: "No se ha encontrado al usuario" });
+        res.status(500).send({ error: "No se ha encontrado al usuario" });
     })
 });
 
@@ -54,11 +54,11 @@ router.put('/:id', autenticado.privilegiosAdmin, (req, res) => {
         }
     }).then(x => {
         res.status(200).send({
-            ok: true, resultado: x
+            resultado: x
         });
     }).catch(() => {
         res.status(500).send({
-            ok: false, error: "No se ha encontrado al usuario"
+            error: "No se ha encontrado al usuario"
         });
     });
 });
@@ -74,11 +74,11 @@ router.put('/me', (req, res) => {
         }
     }).then(x => {
         res.status(200).send({
-            ok: true, resultado: x
+            resultado: x
         });
     }).catch(() => {
         res.status(500).send({
-            ok: false, error: "No se ha encontrado al usuario"
+            error: "No se ha encontrado al usuario"
         });
     });
 });
@@ -91,9 +91,7 @@ router.patch('/:id/password', autenticado.privilegiosAdmin, async (req, res) => 
             }
         });
 
-        res.status(200).send({
-            ok: true
-        });
+        res.status(200).send();
     } catch (err) {
         res.status(500).send({ ok: false, error: "Error actualizando la contraseña" });
     }
@@ -108,9 +106,7 @@ router.patch('/me/password', async (req, res) => {
             }
         });
 
-        res.status(200).send({
-            ok: true
-        });
+        res.status(200).send();
     } catch (err) {
         res.status(500).send({ ok: false, error: "Error actualizando la contraseña" });
     }
@@ -129,11 +125,9 @@ router.patch('/me/avatar', async (req, res) => {
             }
         });
 
-        res.status(200).send({
-            ok: true
-        });
+        res.status(200).send();
     } catch (err) {
-        res.status(500).send({ ok: false, error: "Error actualizando el avatar" });
+        res.status(500).send({ error: "Error actualizando el avatar" });
     }
 });
 

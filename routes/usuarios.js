@@ -117,7 +117,7 @@ router.patch('/me/avatar', async (req, res) => {
     try {
         let userToken = tokenFunctions.validarToken(req.headers['authorization'].split(' ')[1]);
 
-        const pathFoto = upload.storage(req.body.foto, userToken.nombre_completo, 'usuarios').fileName;
+        const pathFoto = upload.storage(req.body.foto, 'usuarios').fileName;
 
         await User.findByIdAndUpdate(userToken.id, {
             $set: {

@@ -18,6 +18,7 @@ let app = express();
 // Carga de middleware y enrutadores
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb' }));
+app.use(express.static(__dirname + '/uploads/images'));
 app.use(autenticado.peticionesLocalHost);
 app.use('/auth', auth);
 app.use('/equipos', autenticado.rutaProtegida, equipos);

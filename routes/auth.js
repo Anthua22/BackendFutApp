@@ -10,8 +10,9 @@ const OAuth2Client = require('google-auth-library');
 let router = express.Router();
 
 router.post('/register', async (req, res) => {
+    let pathFoto = `http://${req.hostname}:8080/miembros_equipos/`;
     if (req.body.password && req.body.nombre_completo && req.body.email) {
-        const pathFoto = upload.storage(req.body.foto, req.body.nombre_completo, 'usuarios').fileName;
+        pathFoto += upload.storage(req.body.foto, 'usuarios').fileName;
         let newUser = new Usuario({
             nombre_completo: req.body.nombre_completo,
             email: req.body.email,
@@ -37,6 +38,7 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', (req, res) => {
+    console.log(`http://${req.hostname}:8080/uploads/images/1618835767103_Anthony Ubillus.jpeg`)
     Usuario.findOne({
         email: req.body.email
     }).then(x => {
@@ -46,6 +48,7 @@ router.post('/login', (req, res) => {
                     res.status(200).send({
                         token: token.generarToken(x)
                     });
+                    req.session.user = x;
                 } else {
                     res.status(401).send({
                         error: 'Contraseña incorrecta'
@@ -59,7 +62,9 @@ router.post('/login', (req, res) => {
         }
 
     }).catch(err => {
-        console.log(err)
+        res.status(500).send({
+            error: 'Error al loguearse'
+        });
     })
 });
 

@@ -42,9 +42,9 @@ router.post('/', (req, res) => {
             direccion_campo: req.body.direccion_campo,
             categoria: req.body.categoria
         });
-        let pathFoto = '';
+        let pathFoto = `http://${req.hostname}:8080/equipos/`;
         if (req.body.escudo) {
-            pathFoto = upload.storage(req.body.escudo, req.body.nombre, 'equipos').fileName;
+            pathFoto += upload.storage(req.body.escudo, 'equipos').fileName;
             newEquipo.escudo = pathFoto;
         }
         newEquipo.save().then(resultado => {
@@ -84,8 +84,8 @@ router.post('/categoria', (req, res) => {
 router.post('/:idEquipo/miembros_equipo', (req, res) => {
 
     let newMiembro = req.body.miembro;
-    const pathFoto = upload.storage(req.body.miembro.foto, req.body.miembro.nombre_completo, 'miembros_equipos').fileName;
-    newMiembro.foto = pathFoto;
+    const pathFoto = `http://${req.hostname}:8080/miembros_equipos/`;
+    newMiembro.foto = pathFoto + upload.storage(req.body.miembro.foto, 'miembros_equipos').fileName;
 
     Equipo.findByIdAndUpdate(req.params['idEquipo'], {
         $push: {
@@ -94,6 +94,7 @@ router.post('/:idEquipo/miembros_equipo', (req, res) => {
     }, {
         new: true
     }).then(x => {
+        
         if (x) {
             res.status(201).send({
                 resultado: x
@@ -112,11 +113,12 @@ router.post('/:idEquipo/miembros_equipo', (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-    let fotoNueva = '';
+    let fotoNueva = `http://${req.hostname}:8080/equipos/`;
     try {
         if (req.body.nombre && req.body.categoria) {
             if (req.body.escudo) {
-                fotoNueva = upload.storage(req.body.escudo, req.body.nombre, 'equipos').fileName;
+                fotoNueva += upload.storage(req.body.escudo, 'equipos').fileName;
+                
                 const EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['id'], {
                     $set: {
                         nombre: req.body.nombre,
@@ -164,73 +166,10 @@ router.put('/:id', async (req, res) => {
             });
         }
     } catch (err) {
-        if (fotoNueva !== '') {
-            commons.deleteImagen('miembros_equipos/' + pathFoto);
-        }
         res.status(500).send({
             error: "Error actualizando el equipo"
         });
     }
-
-
-});
-
-router.patch('/:id/email', (req, res) => {
-    if (req.body.email) {
-        Equipo.findByIdAndUpdate(req.params['id'], {
-            $set: {
-                email: req.body.email,
-            }
-        }, {
-            new: true
-        }).then(x => {
-            if (x) {
-                res.status(200).send({
-                    resultado: x
-                });
-            }
-        }).catch(err => {
-            commons.checkErrors(err, res);
-        });
-    } else {
-        res.status(400).send({
-            error: "El campo email está vacío"
-        });
-    }
-
-});
-
-router.put('/:idEquipo/:idMiembro', async (req, res) => {
-    try {
-        let EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['idEquipo'], {
-            $pull: {
-                miembros: { _id: req.params['idMiembro'] }
-            }
-        }, {
-            new: true
-        });
-        if (EquipoActualizado) {//Comprobamos si existía el miembro del equipo sino existía devolvería null
-            EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['idEquipo'], {
-                $push: {
-                    miembros: req.body.miembro
-                }
-            }, {
-                new: true
-            });
-            res.status(200).send({
-                resultado: EquipoActualizado
-            })
-        } else {
-            res.status(400).send({
-                error: "No existe el miembro del equipo"
-            })
-        }
-    } catch (err) {
-        res.status(500).send({
-            error: "Error actualizando el miembro del equipo"
-        })
-    }
-
 
 
 });

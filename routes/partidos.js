@@ -14,13 +14,8 @@ router.get('/', (req, res) => {
     .populate('cronometrador')
     .sort({ fecha_modificacion: -1 })
     .then(x => {
-      if (x.length > 0) {
-        res.send({ resultado: x });
-      } else {
-        res.status(500).send({ error: 'No hay ningún partido' });
-      }
+      res.send({ resultado: x });
     }).catch(err => {
-      console.log(err)
       res.status(500).send({
         error: 'No se han podido obtener los partidos'
       });
@@ -53,7 +48,7 @@ router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, 
       lugar_encuentro: req.body.lugar_encuentro
     });
 
-    newPartido.save().populate('equipo_local').populate('equipo_visitante').then(x => {
+    newPartido.save().then(x => {
       res.send({ resultado: x });
     }).catch(err => {
       commons.checkErrorsPartido(err, res);
@@ -137,6 +132,10 @@ router.delete('/:id', async (req, res) => {
     if (partidoBorrar) {
       res.status(200)
         .send({ resultado: partidoBorrar });
+    } else {
+      res.status(500).send({
+        error: "No se ha encontrado el partido"
+      });
     }
   } catch (err) {
     res.status(500).send({

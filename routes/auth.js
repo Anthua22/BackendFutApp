@@ -10,7 +10,7 @@ const OAuth2Client = require('google-auth-library');
 let router = express.Router();
 
 router.post('/register', async (req, res) => {
-    let pathFoto = `http://${req.hostname}:8080/miembros_equipos/`;
+    let pathFoto = `http://${req.hostname}:8080/usuarios/`;
     if (req.body.password && req.body.nombre_completo && req.body.email) {
         pathFoto += upload.storage(req.body.foto, 'usuarios').fileName;
         let newUser = new Usuario({
@@ -19,7 +19,7 @@ router.post('/register', async (req, res) => {
             categoria: req.body.categoria,
             password: await bcrypt.encriptar(req.body.password),
             rol: req.body.rol,
-            avatar: pathFoto
+            foto: pathFoto
         });
         newUser.save().then(x => {
             res.status(201).send({
@@ -84,7 +84,7 @@ router.post('/google', async (req, res) => {
                 nombre_completo: payload.name,
                 email: payload.email,
                 password: await bcrypt.encriptar(''),
-                avatar: payload.picture
+                foto: payload.picture
             });
 
             let newUser = await User.save();

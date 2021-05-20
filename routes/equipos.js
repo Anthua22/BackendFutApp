@@ -1,3 +1,4 @@
+const { response } = require('express');
 const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
 const upload = require(__dirname + './../utils/uploads');
@@ -32,6 +33,22 @@ router.get('/:id', (req, res) => {
             error: "No se ha podido encontrar al equipo"
         });
     })
+});
+
+router.get('/:id/miembros_equipo/jugadores', async (req, res) => {
+    try {
+      
+        const equipoResultado = await Equipo.findById( req.params['id'] ).select('miembros');
+        console.log(equipoResultado);
+        const resultado = equipoResultado.miembros.filter(x => x.rol === 'JUGADOR');
+        res.send({ resultado: resultado });
+    } catch (err) {
+        response.status(500).send({
+            error: 'No se han podido obtener los miembros del equipo'
+        })
+    }
+
+
 });
 
 router.post('/', (req, res) => {
@@ -76,7 +93,7 @@ router.post('/categoria', (req, res) => {
 
     }).catch(err => {
         res.status(500).send({
-            ok: false, error: 'No se han podido obtener los equipos'
+            error: 'No se han podido obtener los equipos'
         });
     });
 });
@@ -94,7 +111,7 @@ router.post('/:idEquipo/miembros_equipo', (req, res) => {
     }, {
         new: true
     }).then(x => {
-        
+
         if (x) {
             res.status(201).send({
                 resultado: x
@@ -118,7 +135,7 @@ router.put('/:id', async (req, res) => {
         if (req.body.nombre && req.body.categoria) {
             if (req.body.escudo) {
                 fotoNueva += upload.storage(req.body.escudo, 'equipos').fileName;
-                
+
                 const EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['id'], {
                     $set: {
                         nombre: req.body.nombre,

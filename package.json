@@ -19,6 +19,7 @@
   "dependencies": {
     "base64-to-image": "^1.0.2",
     "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "google-auth-library": "^7.0.4",
     "googleapis": "^71.0.0",

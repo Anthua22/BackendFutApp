@@ -7,9 +7,9 @@ let rutaProtegida = (req, res, next) => {
             next();
         }
         else
-            res.status(401).send({ ok: false, error: "Unauthorized" });
+            res.status(401).send({ error: "Unauthorized" });
     } else
-        res.status(401).send({ ok: false, error: "Unauthorized" });
+        res.status(401).send({  error: "Unauthorized" });
 
 };
 
@@ -20,11 +20,11 @@ let privilegiosAdmin = (req, res, next) => {
         if (user.rol === 'ADMIN') {
             next();
         } else {
-            res.status(401).send({ ok: false, error: "Unauthorized" });
+            res.status(401).send({ error: "Unauthorized" });
         }
     }
     else
-        res.status(401).send({ ok: false, error: "Unauthorized" });
+        res.status(401).send({ error: "Unauthorized" });
 
 }
 
@@ -37,7 +37,7 @@ let privilegiosActa = (req, res, next) => {
             user._id === req.body.cronometrador) {
             next();
         } else {
-            res.status(401).send({ ok: false, error: "Unauthorized" });
+            res.status(401).send({ error: "Unauthorized" });
         }
     }
 

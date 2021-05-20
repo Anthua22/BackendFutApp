@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', autenticado.rutaProtegida, (req, res) => {
-  Partido.findById(req.params['id']).populate('equipo_local').populate('equipo_visitante').then(x => {
+  Partido.findById(req.params['id']).populate('equipo_local').populate('arbitro_principal').populate('equipo_visitante').then(x => {
     res.status(200).send({ resultado: x })
 
   }).catch(err => {

@@ -48,7 +48,6 @@ router.post('/login', (req, res) => {
                     res.status(200).send({
                         token: token.generarToken(x)
                     });
-                    req.session.user = x;
                 } else {
                     res.status(401).send({
                         error: 'Contraseña incorrecta'

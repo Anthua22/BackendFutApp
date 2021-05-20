@@ -40,6 +40,7 @@ app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ limit: '25mb' }));
 app.use(express.static(__dirname + '/uploads/images'));
 app.use('/auth', auth);
+app.use(cors());
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use('/equipos', cors(), autenticado.rutaProtegida, equipos);

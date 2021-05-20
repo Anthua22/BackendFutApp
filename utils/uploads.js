@@ -9,7 +9,7 @@ let storage = (base64, carpeta) => {
     const path = __dirname + './../uploads/images/' + carpeta + '/' + name;
     fs.writeFile(path, Image[1], 'base64', function (err) {
         if (err) {
-            throw new exception('No se ha podido crear el archivo')
+            throw 'No se ha podido crear el archivo';
         }
     });
     return name;

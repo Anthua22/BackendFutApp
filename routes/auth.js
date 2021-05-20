@@ -12,7 +12,7 @@ let router = express.Router();
 router.post('/register', async (req, res) => {
     let pathFoto = `http://${req.hostname}:8080/usuarios/`;
     if (req.body.password && req.body.nombre_completo && req.body.email) {
-        pathFoto += upload.storage(req.body.foto, 'usuarios').fileName;
+        pathFoto += upload.storage(req.body.foto, 'usuarios');
         let newUser = new Usuario({
             nombre_completo: req.body.nombre_completo,
             email: req.body.email,

@@ -61,7 +61,7 @@ router.post('/', (req, res) => {
         });
         let pathFoto = `http://${req.hostname}:8080/equipos/`;
         if (req.body.escudo) {
-            pathFoto += upload.storage(req.body.escudo, 'equipos').fileName;
+            pathFoto += upload.storage(req.body.escudo, 'equipos');
             newEquipo.escudo = pathFoto;
         }
         newEquipo.save().then(resultado => {
@@ -102,7 +102,7 @@ router.post('/:idEquipo/miembros_equipo', (req, res) => {
 
     let newMiembro = req.body.miembro;
     const pathFoto = `http://${req.hostname}:8080/miembros_equipos/`;
-    newMiembro.foto = pathFoto + upload.storage(req.body.miembro.foto, 'miembros_equipos').fileName;
+    newMiembro.foto = pathFoto + upload.storage(req.body.miembro.foto, 'miembros_equipos');
 
     Equipo.findByIdAndUpdate(req.params['idEquipo'], {
         $push: {
@@ -134,7 +134,7 @@ router.put('/:id', async (req, res) => {
     try {
         if (req.body.nombre && req.body.categoria) {
             if (req.body.escudo) {
-                fotoNueva += upload.storage(req.body.escudo, 'equipos').fileName;
+                fotoNueva += upload.storage(req.body.escudo, 'equipos');
 
                 const EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['id'], {
                     $set: {

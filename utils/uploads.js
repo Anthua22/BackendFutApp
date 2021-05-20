@@ -1,15 +1,18 @@
-const base64ToImage = require('base64-to-image');
+const { exception } = require('console');
+const fs = require('fs');
 
 let storage = (base64, carpeta) => {
-    try {
-        const path = __dirname + './../uploads/images/' + carpeta + '/';
-        let optionalObj = { 'fileName': Date.now() + "_" };
-        return base64ToImage(base64, path, optionalObj);
-
-    } catch (err) {
-        console.log(err)
-    }
-
+    const Image = base64.split(',');
+    const extencionBlock = Image[0].split('/');
+    const extencionSubBlock = extencionBlock[1].split(';');
+    const name = Date.now() + '.' + extencionSubBlock[0];
+    const path = __dirname + './../uploads/images/' + carpeta + '/' + name;
+    fs.writeFile(path, Image[1], 'base64', function (err) {
+        if (err) {
+            throw new exception('No se ha podido crear el archivo')
+        }
+    });
+    return name;
 }
 
 

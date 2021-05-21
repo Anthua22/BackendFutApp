@@ -32,6 +32,10 @@ let PartidoSchema = new mongoose.Schema({
         require:true,
         type: Number
     },
+    resultado:{
+        type: String,
+        trim:true
+    },
 
     lugar_encuentro: {
         require: false,

@@ -89,7 +89,8 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
       lugar_encuentro: req.body.lugar_encuentro,
       lt: req.body.lt,
       ln: req.body.ln,
-      fecha_encuentro: req.body.fecha_encuentro
+      fecha_encuentro: req.body.fecha_encuentro,
+      resultado: req.body.resultado
 
     }
   }, {

@@ -46,7 +46,7 @@ app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 app.use('/equipos', cors(), autenticado.rutaProtegida, equipos);
 app.use('/partidos', partidos);
-app.use('/usuarios', autenticado.rutaProtegida, usuarios);
+app.use('/users', autenticado.rutaProtegida, usuarios);
 
 
 // Puesta en marcha del servidor

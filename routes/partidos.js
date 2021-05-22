@@ -125,7 +125,7 @@ router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa
 
   }).catch(() => {
     res.status(500).send({
-      error: "No se ha encontrado el partido"
+      error: "No se ha podido subir el acta del partido"
     });
   })
 });
@@ -148,8 +148,6 @@ router.delete('/:id', async (req, res) => {
   }
 
 });
-
-
 
 
 module.exports = router;

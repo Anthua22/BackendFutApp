@@ -109,11 +109,8 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
   });
 });
 
-router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
-  
-  const acta =  `http://${req.hostname}:8080/actas/${uploads.storageActa(req.body.acta)}`;
-
-  
+router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {  
+  const acta =  `http://${req.hostname}:8080/actas/${uploads.storage(req.body.acta, 'actas')}`;
   Partido.findByIdAndUpdate(req.params['id'], {
     $set: {
       acta: acta,

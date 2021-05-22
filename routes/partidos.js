@@ -2,6 +2,8 @@ const express = require('express');
 const Partido = require(__dirname + './../models/partido');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');
+const uploads = require(__dirname+'./../utils/uploads');
+
 const moment = require('moment');
 
 let router = express.Router();
@@ -108,9 +110,13 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
 });
 
 router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
+  
+  const acta =  `http://${req.hostname}:8080/actas/${uploads.storageActa(req.body.acta)}`;
+
+  
   Partido.findByIdAndUpdate(req.params['id'], {
     $set: {
-      acta: req.body.acta,
+      acta: acta,
       fecha_modificacion: moment().format('YYYY-MM-DD')
     }
   }, {

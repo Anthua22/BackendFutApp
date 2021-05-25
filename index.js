@@ -46,7 +46,7 @@ app.use('/auth', auth);
 app.use(cors());
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
-app.use('/equipos', cors(), autenticado.rutaProtegida, equipos);
+app.use('/equipos', cors(), equipos);
 app.use('/partidos', partidos);
 app.use('/users', autenticado.rutaProtegida, usuarios);
 

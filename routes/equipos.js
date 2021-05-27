@@ -1,6 +1,6 @@
-const { response } = require('express');
 const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
+const MiembroEquipo = require(__dirname + './../models/miembroequipo');
 const upload = require(__dirname + './../utils/uploads');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');

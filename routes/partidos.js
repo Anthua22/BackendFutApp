@@ -63,7 +63,9 @@ router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, 
 });
 
 router.post('/categoria', (req, res) => {
-  Partido.find({ categoria: req.body.categoria }).populate('equipo_visitante')
+  Partido.find({ categoria: req.body.categoria })
+    .populate('equipo_visitante')
+    .populate('equipo_local')
     .populate('arbitro_principal')
     .populate('arbitro_secundario')
     .populate('cronometrador')

@@ -45,6 +45,7 @@ let privilegiosActa = (req, res, next) => {
 
 let peticionesLocalHost = (req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
     // Request methods you wish to allow
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
     // Request headers you wish to allow

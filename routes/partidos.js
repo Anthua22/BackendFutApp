@@ -2,7 +2,7 @@ const express = require('express');
 const Partido = require(__dirname + './../models/partido');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');
-const uploads = require(__dirname+'./../utils/uploads');
+const uploads = require(__dirname + './../utils/uploads');
 
 const moment = require('moment');
 
@@ -63,16 +63,16 @@ router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, 
 });
 
 router.post('/categoria', (req, res) => {
-  Partido.find({ categoria: req.body.categoria }).populate('equipo_visitante')
+  Partido.find({ categoria: req.body.categoria })
+    .populate('equipo_visitante')
+    .populate('equipo_local')
     .populate('arbitro_principal')
     .populate('arbitro_secundario')
     .populate('cronometrador')
     .sort({ fecha_modificacion: -1 }).then(result => {
-      if (result.length > 0) {
-        res.send({ resultado: result });
-      } else {
-        res.status(400).send({ error: 'No se han encontrado partidos de la categoría especificada' })
-      }
+
+      res.send({ resultado: result });
+
     }).catch(() => {
       res.status(500).send({
         error: 'No se han podido obtener los partidos'
@@ -109,8 +109,8 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
   });
 });
 
-router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {  
-  const acta =  `http://${req.hostname}:8080/actas/${uploads.storage(req.body.acta, 'actas')}`;
+router.patch('/:id/acta', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
+  const acta = `http://${req.hostname}:8080/actas/${uploads.storage(req.body.acta, 'actas')}`;
   Partido.findByIdAndUpdate(req.params['id'], {
     $set: {
       acta: acta,
@@ -137,7 +137,7 @@ router.delete('/:id', async (req, res) => {
       res.status(200)
         .send({ resultado: partidoBorrar });
     } else {
-      res.status(500).send({
+      res.status(400).send({
         error: "No se ha encontrado el partido"
       });
     }

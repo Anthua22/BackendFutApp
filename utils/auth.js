@@ -9,7 +9,7 @@ let rutaProtegida = (req, res, next) => {
         else
             res.status(401).send({ error: "Unauthorized" });
     } else
-        res.status(401).send({  error: "Unauthorized" });
+        res.status(401).send({ error: "Unauthorized" });
 
 };
 
@@ -44,8 +44,16 @@ let privilegiosActa = (req, res, next) => {
 }
 
 let peticionesLocalHost = (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost');
+    const allowedOrigins = [
+        'capacitor://localhost',
+        'ionic://localhost',
+        'http://localhost',
+        'http://localhost:8080',
+        'http://localhost:8100'
+    ];
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
     // Request methods you wish to allow
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
     // Request headers you wish to allow

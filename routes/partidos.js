@@ -158,6 +158,8 @@ router.put('/:id/save/jugadores', autenticado.rutaProtegida, autenticado.privile
       suplentesVisitantes: req.body.suplentesVisitantes,
       capitanLocal: req.body.capitanLocal,
       capitanVisitante: req.body.capitanVisitante,
+      porterosLocales: req.body.porterosLocales,
+      porterosVisitantes: req.body.porterosVisitantes
     },
   }, {
     new: true

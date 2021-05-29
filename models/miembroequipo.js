@@ -6,7 +6,6 @@ let MiembroEquipo = new mongoose.Schema({
         type: String,
         trim: true
     },
-
     rol: {
         require: true,
         type: String,

@@ -60,7 +60,9 @@ let PartidoSchema = new mongoose.Schema({
     capitanLocal:MiembrosEquipo,
     capitanVisitante:MiembrosEquipo,
     staffLocal:[MiembrosEquipo],
-    staffVistante:[MiembrosEquipo]
+    staffVistante:[MiembrosEquipo],
+    porterosLocales:[MiembrosEquipo],
+    porterosVisitantes:[MiembrosEquipo]
 
 });
 

@@ -3,18 +3,23 @@ const mongoose = require('mongoose');
 let SancionPartido = new mongoose.Schema({
     jugador: {
         type: String,
-        require:true,
-        trim:true
+        require: true,
+        trim: true
     },
-    minuto:{
+    minuto: {
         type: String,
         require: true,
-        trim:true
+        trim: true
     },
-    sancion:{
+    tarjeta: {
         require: true,
-        type:String,
-        enum:['AMARILLA','ROJA']
+        type: String,
+        enum: ['AMARILLA', 'ROJA']
+    },
+    motivo: {
+        require: true,
+        type: String,
+        trim: true
     }
 });
 

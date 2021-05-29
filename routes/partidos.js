@@ -159,11 +159,12 @@ router.put('/:id/save/jugadores', autenticado.rutaProtegida, autenticado.privile
       capitanLocal: req.body.capitanLocal,
       capitanVisitante: req.body.capitanVisitante,
       porterosLocales: req.body.porterosLocales,
-      porterosVisitantes: req.body.porterosVisitantes
+      porterosVisitantes: req.body.porterosVisitantes,
+      sanciones_jugadores: req.body.sanciones_jugadores
     },
   }, {
     new: true
-  }).then((x)=> {
+  }).then(() => {
     res.status(200).send();
   }).catch(() => {
     res.status(500).send({
@@ -172,5 +173,55 @@ router.put('/:id/save/jugadores', autenticado.rutaProtegida, autenticado.privile
   });
 });
 
+router.put('/:id/save/staff', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
+  Partido.findByIdAndUpdate(req.params['id'], {
+    $set: {
+      staffLocal: req.body.staffLocal,
+      staffVistante: req.body.staffVistante,
+      sanciones_staff: req.body.sanciones_staff
+    },
+  }, {
+    new: true
+  }).then(() => {
+    res.status(200).send();
+  }).catch(() => {
+    res.status(500).send({
+      error: "No se ha podido actualizar el partido"
+    });
+  });
+});
+
+router.patch('/:id/resultado', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
+  Partido.findByIdAndUpdate(req.params['id'], {
+    $set: {
+      resultado: req.body.resultado
+    },
+  }, {
+    new: true
+  }).then(() => {
+    res.status(200).send();
+  }).catch(() => {
+    res.status(500).send({
+      error: "No se ha podido actaulizar el resultado del partido"
+    });
+  });
+});
+
+router.patch('/:id/faltastm', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
+  Partido.findByIdAndUpdate(req.params['id'], {
+    $set: {
+      faltasTmLocal: req.body.faltasTmLocal,
+      faltasTmVisitante: req.body.faltasTmVisitante
+    },
+  }, {
+    new: true
+  }).then(() => {
+    res.status(200).send();
+  }).catch(() => {
+    res.status(500).send({
+      error: "No se ha podido actaulizar el faltas y tiempos muertos del partido"
+    });
+  });
+});
 
 module.exports = router;

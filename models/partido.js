@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const SancionPartido = require('./sancion_partido');
 const MiembrosEquipo = require('./miembroequipo');
+const FaltasTM = require('./faltas-tm');
 const moment = require('moment');
 
 
@@ -29,13 +30,13 @@ let PartidoSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    jornada:{
-        require:true,
+    jornada: {
+        require: true,
         type: Number
     },
-    resultado:{
+    resultado: {
         type: String,
-        trim:true
+        trim: true
     },
     lugar_encuentro: {
         require: false,
@@ -51,18 +52,20 @@ let PartidoSchema = new mongoose.Schema({
         type: Date,
         min: moment().format('YYYY-MM-DD')
     },
-    sanciones_jugadores:[SancionPartido],
-    sanciones_staff:[SancionPartido],
-    titularesLocales:[MiembrosEquipo],
-    titularesVisitantes:[MiembrosEquipo],
-    suplentesLocales:[MiembrosEquipo],
-    suplentesVisitantes:[MiembrosEquipo],
-    capitanLocal:MiembrosEquipo,
-    capitanVisitante:MiembrosEquipo,
-    staffLocal:[MiembrosEquipo],
-    staffVistante:[MiembrosEquipo],
-    porterosLocales:[MiembrosEquipo],
-    porterosVisitantes:[MiembrosEquipo]
+    sanciones_jugadores: [SancionPartido],
+    sanciones_staff: [SancionPartido],
+    titularesLocales: [MiembrosEquipo],
+    titularesVisitantes: [MiembrosEquipo],
+    suplentesLocales: [MiembrosEquipo],
+    suplentesVisitantes: [MiembrosEquipo],
+    capitanLocal: MiembrosEquipo,
+    capitanVisitante: MiembrosEquipo,
+    staffLocal: [MiembrosEquipo],
+    staffVistante: [MiembrosEquipo],
+    porterosLocales: [MiembrosEquipo],
+    porterosVisitantes: [MiembrosEquipo],
+    faltasTmLocal: FaltasTM,
+    faltasTmVisitante: FaltasTM
 
 });
 

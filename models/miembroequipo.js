@@ -21,6 +21,11 @@ let MiembroEquipo = new mongoose.Schema({
         require: false,
         type: Boolean,
         default: false
+    },
+    dorsal:{
+        require:false,
+        type:String,
+        trim:true
     }
 });
 

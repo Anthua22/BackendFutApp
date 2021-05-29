@@ -149,5 +149,26 @@ router.delete('/:id', async (req, res) => {
 
 });
 
+router.put('/:id/save/jugadores', autenticado.rutaProtegida, autenticado.privilegiosActa, (req, res) => {
+  Partido.findByIdAndUpdate(req.params['id'], {
+    $set: {
+      titularesLocales: req.body.titularesLocales,
+      titularesVisitantes: req.body.titularesVisitantes,
+      suplentesLocales: req.body.suplentesLocales,
+      suplentesVisitantes: req.body.suplentesVisitantes,
+      capitanLocal: req.body.capitanLocal,
+      capitanVisitante: req.body.capitanVisitante,
+    },
+  }, {
+    new: true
+  }).then((x)=> {
+    res.status(200).send();
+  }).catch(() => {
+    res.status(500).send({
+      error: "No se ha podido actualizar el partido"
+    });
+  });
+});
+
 
 module.exports = router;

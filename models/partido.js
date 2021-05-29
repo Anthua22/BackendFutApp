@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const SancionPartido = require('./sancion_partido');
+const MiembrosEquipo = require('./miembroequipo');
 const moment = require('moment');
 
 
@@ -50,7 +51,16 @@ let PartidoSchema = new mongoose.Schema({
         type: Date,
         min: moment().format('YYYY-MM-DD')
     },
-    sanciones_partidos:[SancionPartido]
+    sanciones_jugadores:[SancionPartido],
+    sanciones_staff:[SancionPartido],
+    titularesLocales:[MiembrosEquipo],
+    titularesVisitantes:[MiembrosEquipo],
+    suplentesLocales:[MiembrosEquipo],
+    suplentesVisitantes:[MiembrosEquipo],
+    capitanLocal:MiembrosEquipo,
+    capitanVisitante:MiembrosEquipo,
+    staffLocal:[MiembrosEquipo],
+    staffVistante:[MiembrosEquipo]
 
 });
 

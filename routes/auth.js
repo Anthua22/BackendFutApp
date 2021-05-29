@@ -38,7 +38,6 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    console.log(`http://${req.hostname}:8080/uploads/images/1618835767103_Anthony Ubillus.jpeg`)
     Usuario.findOne({
         email: req.body.email
     }).then(x => {
@@ -100,6 +99,19 @@ router.post('/google', async (req, res) => {
 
 })
 
+router.get('/validate', async (req, res) => {
+    try {
+        let userToken = token.validarToken(req.headers['authorization'].split(' ')[1]);
+        let userLogueado = await Usuario.findById(userToken.id);
+        if (userLogueado) {
+            res.status(200).send();
+        } else {
+            res.status(401).send();
+        }
 
+    } catch (err) {
+        res.status(401).send();
+    }
+})
 
 module.exports = router;

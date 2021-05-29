@@ -23,12 +23,11 @@ router.get('/me', async (req, res) => {
     try {
         let userToken = tokenFunctions.validarToken(req.headers['authorization'].split(' ')[1]);
         let userLogueado = await User.findById(userToken.id);
-
         res.status(200).send({
             resultado: userLogueado
         });
     } catch (err) {
-        res.status(500).send({ error: "Error obteniendo el usuario logueado" });
+        res.status(401).send({ error: "Error obteniendo el usuario logueado" });
     }
 
 });
@@ -117,8 +116,6 @@ router.patch('/me/avatar', async (req, res) => {
     try {
         let userToken = tokenFunctions.validarToken(req.headers['authorization'].split(' ')[1]);
         const pathFoto =  `http://${req.hostname}:8080/usuarios/${upload.storage(req.body.foto, 'usuarios')}`;
-        console.log(pathFoto)
-
         await User.findByIdAndUpdate(userToken.id, {
             $set: {
                 foto: pathFoto

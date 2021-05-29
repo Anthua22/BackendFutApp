@@ -37,9 +37,7 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/miembros_equipo/jugadores', async (req, res) => {
     try {
-      
         const equipoResultado = await Equipo.findById( req.params['id'] ).select('miembros');
-        console.log(equipoResultado);
         const resultado = equipoResultado.miembros.filter(x => x.rol === 'JUGADOR');
         res.send({ resultado: resultado });
     } catch (err) {

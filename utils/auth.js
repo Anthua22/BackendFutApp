@@ -51,6 +51,7 @@ let peticionesLocalHost = (req, res, next) => {
         'http://localhost:8080',
         'http://localhost:8100'
     ];
+    const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }

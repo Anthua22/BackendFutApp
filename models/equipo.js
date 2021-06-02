@@ -29,6 +29,14 @@ let EquipoSchema = new mongoose.Schema({
         require: true,
         type: String,
         trim: true
+    },
+    lt: {
+        type: Number,
+        default:0
+    },
+    ln: {
+        type: Number,
+        default:0
     }
 
 

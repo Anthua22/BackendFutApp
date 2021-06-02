@@ -49,13 +49,30 @@ router.get('/:id/miembros_equipo/jugadores', async (req, res) => {
 
 });
 
+router.get('/:id/miembros_equipo/staff', async (req, res) => {
+    try {
+        const equipoResultado = await Equipo.findById( req.params['id'] ).select('miembros');
+        const resultado = equipoResultado.miembros.filter(x => x.rol !== 'JUGADOR');
+        res.send({ resultado: resultado });
+    } catch (err) {
+        response.status(500).send({
+            error: 'No se han podido obtener los miembros del equipo'
+        })
+    }
+
+
+});
+
+
 router.post('/', (req, res) => {
     if (req.body.nombre && req.body.email && req.body.direccion_campo) {
         let newEquipo = new Equipo({
             nombre: req.body.nombre,
             email: req.body.email,
             direccion_campo: req.body.direccion_campo,
-            categoria: req.body.categoria
+            categoria: req.body.categoria,
+            lt: req.body.lt,
+            ln: req.body.ln
         });
         let pathFoto = `http://${req.hostname}:8080/equipos/`;
         if (req.body.escudo) {

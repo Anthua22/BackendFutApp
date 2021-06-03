@@ -135,35 +135,35 @@ router.post('/categoria', (req, res) => {
     });
 });
 
-router.post('/:idEquipo/miembros_equipo', (req, res) => {
+router.post('/:idEquipo/miembros_equipo', async (req, res) => {
+    try {
+        let newMiembro = req.body.miembro;
+        const pathFoto = `http://${req.hostname}:8080/miembros_equipos/`;
+        newMiembro.foto = pathFoto + upload.storage(req.body.miembro.foto, 'miembros_equipos');
 
-    let newMiembro = req.body.miembro;
-    const pathFoto = `http://${req.hostname}:8080/miembros_equipos/`;
-    newMiembro.foto = pathFoto + upload.storage(req.body.miembro.foto, 'miembros_equipos');
-
-    Equipo.findByIdAndUpdate(req.params['idEquipo'], {
-        $push: {
-            miembros: newMiembro
-        }
-    }, {
-        new: true
-    }).then(x => {
-
-        if (x) {
+        const EquipoMiembro = await Equipo.findByIdAndUpdate(req.params['idEquipo'], {
+            $push: {
+                miembros: newMiembro
+            }
+        }, {
+            new: true
+        });
+        if (EquipoMiembro) {
             res.status(201).send({
-                resultado: x
+                resultado: EquipoMiembro
             });
         } else {
             res.status(400).send({
                 error: "No existe el equipo"
             });
         }
-    }).catch(err => {
+    } catch (err) {
         commons.deleteImagen('miembros_equipos/' + pathFoto);
         res.status(500).send({
             error: "Error insertando un nuevo miembro al equipo"
         })
-    });
+    }
+
 });
 
 router.put('/:id', async (req, res) => {
@@ -179,8 +179,8 @@ router.put('/:id', async (req, res) => {
                         categoria: req.body.categoria,
                         direccion_campo: req.body.direccion_campo,
                         escudo: fotoNueva,
-                        lt:req.body.lt,
-                        ln:req.body.ln
+                        lt: req.body.lt,
+                        ln: req.body.ln
                     }
                 }, {
                     new: true

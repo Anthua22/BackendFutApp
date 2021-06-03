@@ -198,7 +198,7 @@ router.put('/:id', async (req, res) => {
             } else {
                 const EquipoActualizado = await Equipo.findByIdAndUpdate(req.params['id'], {
                     $set: {
-                        nombre: req.body.nombre_completo,
+                        nombre: req.body.nombre,
                         categoria: req.body.categoria,
                         direccion_campo: req.body.direccion_campo,
                     }

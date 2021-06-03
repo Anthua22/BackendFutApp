@@ -1,8 +1,8 @@
 const express = require('express');
 const Equipo = require(__dirname + './../models/equipo');
-const MiembroEquipo = require(__dirname + './../models/miembroequipo');
 const upload = require(__dirname + './../utils/uploads');
 const commons = require(__dirname + './../utils/common');
+const Partido = require(__dirname + './../models/partido');
 const autenticado = require(__dirname + './../utils/auth');
 
 let router = express.Router();
@@ -37,7 +37,7 @@ router.get('/:id', (req, res) => {
 
 router.get('/:id/miembros_equipo/jugadores', async (req, res) => {
     try {
-        const equipoResultado = await Equipo.findById( req.params['id'] ).select('miembros');
+        const equipoResultado = await Equipo.findById(req.params['id']).select('miembros');
         const resultado = equipoResultado.miembros.filter(x => x.rol === 'JUGADOR');
         res.send({ resultado: resultado });
     } catch (err) {
@@ -51,7 +51,7 @@ router.get('/:id/miembros_equipo/jugadores', async (req, res) => {
 
 router.get('/:id/miembros_equipo/staff', async (req, res) => {
     try {
-        const equipoResultado = await Equipo.findById( req.params['id'] ).select('miembros');
+        const equipoResultado = await Equipo.findById(req.params['id']).select('miembros');
         const resultado = equipoResultado.miembros.filter(x => x.rol !== 'JUGADOR');
         res.send({ resultado: resultado });
     } catch (err) {
@@ -63,6 +63,28 @@ router.get('/:id/miembros_equipo/staff', async (req, res) => {
 
 });
 
+router.get('/:id/partidos', (req, res) => {
+    Partido.find({
+        $or: [
+            { equipo_local: req.params['id'] },
+            { equipo_visitante: req.params['id'] }
+        ]
+    }).populate('equipo_local')
+        .populate('equipo_visitante')
+        .populate('arbitro_principal')
+        .populate('arbitro_secundario')
+        .populate('cronometrador')
+        .sort({ fecha_modificacion: -1 })
+        .then(x => {
+            res.send({
+                resultado: x
+            });
+        }).catch(err => {
+            res.status(500).send({
+                error: 'No se han podido obtener los partido del equipo'
+            });
+        })
+})
 
 router.post('/', (req, res) => {
     if (req.body.nombre && req.body.email && req.body.direccion_campo) {

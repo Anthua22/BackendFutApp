@@ -178,7 +178,9 @@ router.put('/:id', async (req, res) => {
                         nombre: req.body.nombre,
                         categoria: req.body.categoria,
                         direccion_campo: req.body.direccion_campo,
-                        escudo: fotoNueva
+                        escudo: fotoNueva,
+                        lt:req.body.lt,
+                        ln:req.body.ln
                     }
                 }, {
                     new: true

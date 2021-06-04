@@ -155,7 +155,7 @@ router.patch('/me/password', async (req, res) => {
 router.patch('/me/avatar', async (req, res) => {
     try {
         let userToken = tokenFunctions.validarToken(req.headers['authorization'].split(' ')[1]);
-        const pathFoto =  `http://${req.hostname}:8080/usuarios/${upload.storage(req.body.foto, 'usuarios')}`;
+        const pathFoto = `http://${req.hostname}:8080/usuarios/${upload.storage(req.body.foto, 'usuarios')}`;
         await User.findByIdAndUpdate(userToken.id, {
             $set: {
                 foto: pathFoto
@@ -175,6 +175,13 @@ router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
             commons.deleteImagen('usuarios/' + usuarioBorrar.avatar);
         }
 
+        await Partido.deleteMany({
+            $or: [
+                { arbitro_principal: req.params['id'] },
+                { arbitro_secundario: req.params['id'] },
+                { cronometrador: req.params['id'] }
+            ]
+        });
         usuarioBorrar = await User.findByIdAndRemove(req.params['id']);
         if (usuarioBorrar) {
             res.status(200)

@@ -18,6 +18,20 @@ router.get('/', (req, res) => {
     })
 })
 
+router.post('/categoria', (req, res) => {
+    User.find({ categoria: req.body.categoria }).then(resultado => {
+        if (resultado.length > 0) {
+            res.send({ resultado: resultado });
+        } else {
+            res.status(400).send({ error: 'No se han encontrado árbitros en la categoría especificada' })
+        }
+
+    }).catch(err => {
+        res.status(500).send({
+            error: 'No se han podido obtener los árbitros'
+        });
+    });
+});
 
 router.get('/me', async (req, res) => {
     try {

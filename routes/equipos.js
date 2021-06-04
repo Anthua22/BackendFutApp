@@ -125,7 +125,7 @@ router.post('/categoria', (req, res) => {
         if (resultado.length > 0) {
             res.send({ resultado: resultado });
         } else {
-            res.status(500).send({ error: 'No se han encontrado equipos en la categoría especificada' })
+            res.status(400).send({ error: 'No se han encontrado equipos en la categoría especificada' })
         }
 
     }).catch(err => {

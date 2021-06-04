@@ -112,6 +112,16 @@ router.get('/validate', async (req, res) => {
     } catch (err) {
         res.status(401).send();
     }
+});
+
+router.get('/validate/password', async (req, res) => {
+    try{
+        const result = await bcrypt.desincriptar(req.body.password_check, req.body.password);
+        res.send({resultado : result})
+    }catch(err){
+        res.status(500).send();
+    }
+    
 })
 
 module.exports = router;

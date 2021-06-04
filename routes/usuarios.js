@@ -4,7 +4,7 @@ const commons = require(__dirname + './../utils/common');
 const upload = require(__dirname + './../utils/uploads');
 const tokenFunctions = require(__dirname + '/../utils/token');
 const autenticado = require(__dirname + './../utils/auth');
-
+const Partido = require(__dirname + './../models/partido');
 
 let router = express.Router();
 
@@ -32,6 +32,30 @@ router.post('/categoria', (req, res) => {
         });
     });
 });
+
+router.get('/:id/partidos', (req, res) => {
+    Partido.find({
+        $or: [
+            { arbitro_principal: req.params['id'] },
+            { arbitro_secundario: req.params['id'] },
+            { cronometrador: req.params['id'] }
+        ]
+    }).populate('equipo_local')
+        .populate('equipo_visitante')
+        .populate('arbitro_principal')
+        .populate('arbitro_secundario')
+        .populate('cronometrador')
+        .sort({ fecha_modificacion: -1 })
+        .then(x => {
+            res.send({
+                resultado: x
+            });
+        }).catch(err => {
+            res.status(500).send({
+                error: 'No se han podido obtener los partido del árbitro'
+            });
+        });
+})
 
 router.get('/me', async (req, res) => {
     try {

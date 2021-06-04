@@ -83,7 +83,7 @@ router.get('/:id/partidos', (req, res) => {
             res.status(500).send({
                 error: 'No se han podido obtener los partido del equipo'
             });
-        })
+        });
 })
 
 router.post('/', (req, res) => {

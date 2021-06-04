@@ -4,6 +4,7 @@ const commons = require(__dirname + './../utils/common');
 const upload = require(__dirname + './../utils/uploads');
 const tokenFunctions = require(__dirname + '/../utils/token');
 const autenticado = require(__dirname + './../utils/auth');
+const bcrypt = require(__dirname + './../utils/bcrypt');
 const Partido = require(__dirname + './../models/partido');
 
 let router = express.Router();
@@ -122,9 +123,10 @@ router.put('/me', (req, res) => {
 
 router.patch('/:id/password_change', autenticado.privilegiosAdmin, async (req, res) => {
     try {
+        const passEncript = await bcrypt.encriptar(req.body.password);
         await User.findByIdAndUpdate(req.params['id'], {
             $set: {
-                password: req.body.password
+                password: passEncript
             }
         });
 
@@ -137,9 +139,10 @@ router.patch('/:id/password_change', autenticado.privilegiosAdmin, async (req, r
 router.patch('/me/password', async (req, res) => {
     try {
         let userToken = tokenFunctions.validarToken(req.headers['authorization'].split(' ')[1]);
+        const passEncript = await bcrypt.encriptar(req.body.password);
         await User.findByIdAndUpdate(userToken.id, {
             $set: {
-                password: req.body.password
+                password: passEncript
             }
         });
         res.status(200).send();

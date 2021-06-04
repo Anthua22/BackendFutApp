@@ -120,7 +120,7 @@ router.put('/me', (req, res) => {
     });
 });
 
-router.patch('/:id/password', autenticado.privilegiosAdmin, async (req, res) => {
+router.patch('/:id/password_change', autenticado.privilegiosAdmin, async (req, res) => {
     try {
         await User.findByIdAndUpdate(req.params['id'], {
             $set: {
@@ -142,7 +142,6 @@ router.patch('/me/password', async (req, res) => {
                 password: req.body.password
             }
         });
-
         res.status(200).send();
     } catch (err) {
         res.status(500).send({ ok: false, error: "Error actualizando la contraseña" });

@@ -237,6 +237,13 @@ router.delete('/:id', autenticado.privilegiosAdmin, async (req, res) => {
             commons.deleteImagen('equipos/' + EquipoBorrar.escudo);
         }
         await commons.borrarFotosMiembrosClub(EquipoBorrar);
+        await Partido.deleteMany({
+            $or: [
+                { equipo_local: req.params['id'] },
+                { equipo_visitante: req.params['id'] }
+            ]
+        });
+
         EquipoBorrar = await Equipo.findByIdAndRemove(req.params['id']);
         if (EquipoBorrar) {
             res.status(200)

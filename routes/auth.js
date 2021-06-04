@@ -114,7 +114,7 @@ router.get('/validate', async (req, res) => {
     }
 });
 
-router.get('/validate/password', async (req, res) => {
+router.post('/validate/password', async (req, res) => {
     try{
         const result = await bcrypt.desincriptar(req.body.password_check, req.body.password);
         res.send({resultado : result})

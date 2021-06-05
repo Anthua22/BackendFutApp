@@ -47,7 +47,8 @@ router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, 
       categoria: req.body.categoria,
       lt: req.body.lt,
       ln: req.body.ln,
-      lugar_encuentro: req.body.lugar_encuentro
+      lugar_encuentro: req.body.lugar_encuentro,
+      jornada: req.body.jornada,
     });
 
     newPartido.save().then(x => {
@@ -92,7 +93,8 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
       lt: req.body.lt,
       ln: req.body.ln,
       fecha_encuentro: req.body.fecha_encuentro,
-      resultado: req.body.resultado
+      jornada: req.body.jornada,
+      
 
     }
   }, {

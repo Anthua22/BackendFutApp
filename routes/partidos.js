@@ -25,14 +25,18 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', autenticado.rutaProtegida, (req, res) => {
-  Partido.findById(req.params['id']).populate('equipo_local').populate('arbitro_principal').populate('equipo_visitante').then(x => {
-    res.status(200).send({ resultado: x })
+  Partido.findById(req.params['id']).populate('equipo_local')
+    .populate('equipo_visitante')
+    .populate('arbitro_principal')
+    .populate('arbitro_secundario')
+    .populate('cronometrador').then(x => {
+      res.status(200).send({ resultado: x })
 
-  }).catch(err => {
-    res.status(500).send({
-      error: "No se ha podido encontrar al equipo"
+    }).catch(err => {
+      res.status(500).send({
+        error: "No se ha podido encontrar al equipo"
+      });
     });
-  });
 });
 
 router.post('/', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req, res) => {
@@ -94,7 +98,7 @@ router.put('/:id', autenticado.rutaProtegida, autenticado.privilegiosAdmin, (req
       ln: req.body.ln,
       fecha_encuentro: req.body.fecha_encuentro,
       jornada: req.body.jornada,
-      
+
 
     }
   }, {

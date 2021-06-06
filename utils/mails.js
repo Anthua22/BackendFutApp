@@ -19,7 +19,7 @@ exports.sendEmail = function (req, res) {
     const fecha = moment(fechaCompleta).format('ll');
     const hora = moment().format('hh:mm A');
     const equipoLocal = req.body.equipo_local;
-    const equipoVisitante = req.body.equipo_local;
+    const equipoVisitante = req.body.equipo_visitante;
     const arbitros = req.body.arbitros;
 
     let emailArbitros = [];
@@ -28,7 +28,8 @@ exports.sendEmail = function (req, res) {
         emailArbitros.push(element.email);
         nombresArbitros.push(element.nombre);
     });
-    const emails = `${equipoLocal.email}, ${equipoVisitante.email}, ${arbitros}, ${emailArbitros.join(',')}`
+    console.log(equipoVisitante.email)
+    const emails = `${equipoLocal.email}, ${equipoVisitante.email}, ${emailArbitros.join(',')}`
 
     const mailOptions = {
         from: 'notificacionesfutapp@gmail.com',
@@ -41,7 +42,6 @@ exports.sendEmail = function (req, res) {
         if (error) {
             res.send(500, error.message);
         } else {
-            console.log("Email sent");
             res.status(200).send();
         }
     });

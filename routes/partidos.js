@@ -3,6 +3,7 @@ const Partido = require(__dirname + './../models/partido');
 const commons = require(__dirname + './../utils/common');
 const autenticado = require(__dirname + './../utils/auth');
 const uploads = require(__dirname + './../utils/uploads');
+const EmailCtrl = require(__dirname + './../utils/mails');
 
 const moment = require('moment');
 
@@ -23,6 +24,8 @@ router.get('/', (req, res) => {
       });
     });
 });
+
+router.post('/email', autenticado.rutaProtegida, autenticado.privilegiosAdmin, EmailCtrl.sendEmail);
 
 router.get('/:id', autenticado.rutaProtegida, (req, res) => {
   Partido.findById(req.params['id']).populate('equipo_local')

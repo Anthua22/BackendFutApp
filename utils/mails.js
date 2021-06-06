@@ -25,8 +25,8 @@ exports.sendEmail = function (req, res) {
     let emailArbitros = [];
     let nombresArbitros = [];
     arbitros.forEach(element => {
-        emailArbitros.push(element.email),
-        nombresArbitros.push(element.nombre)
+        emailArbitros.push(element.email);
+        nombresArbitros.push(element.nombre);
     });
     const emails = `${equipoLocal.email}, ${equipoVisitante.email}, ${arbitros}, ${emailArbitros.join(',')}`
 

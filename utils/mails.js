@@ -28,7 +28,6 @@ exports.sendEmail = function (req, res) {
         emailArbitros.push(element.email);
         nombresArbitros.push(element.nombre);
     });
-    console.log(equipoVisitante.email)
     const emails = `${equipoLocal.email}, ${equipoVisitante.email}, ${emailArbitros.join(',')}`
 
     const mailOptions = {
